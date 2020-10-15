@@ -3,6 +3,9 @@
 Created on Fri Oct 2 11:10:03 2020
 
 @author: ncoz
+
+A modified version of the compositing algorithm for creation of temporal mosaics
+using the Dask Array package.
 """
 
 import math

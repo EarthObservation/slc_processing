@@ -3,6 +3,27 @@
 Created on Thu Oct 8 10:51:17 2020
 
 @author: ncoz
+
+Routine for preparation of SLC data for EO Patches in project AiTLAS.
+It prepares mean weekly mosaics for Coherence and Sigma data. Each weekly
+product will consist of 8 files:
+- Coherence ASC VV
+- Coherence ASC VH
+- Coherence DES VV
+- Coherence DES VH
+- Sigma ASC VV
+- Sigma ASC VH
+- Sigma DES VV
+- Sigma DES VH
+
+Data preparation steps:
+i  ) Split time period into weeks (default is 6 day week)
+ii ) Find all files within a week
+iii) Filter for direction (ASC, DES) and polarization (VV, VH)
+iv ) Within one week find all files with the same timestamp
+v  ) Stitch together all time stamps into a single image
+vi ) Resample (nearest neighbor) and target aligned pixels to match with S-2 raster
+vii) Create mean weekly mosaic from all resampled images for that week
 """
 
 import glob
