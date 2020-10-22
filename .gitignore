@@ -1,2 +1,6 @@
 tmp
 composite_test
+*.xml
+*.iml
+*.json
+*.pyc
