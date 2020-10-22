@@ -110,7 +110,7 @@ def find_individual_images(list_of_days, src, direction, dt):
         else:
             src_month = src
 
-        search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*")
+        search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*.data")
         all_available = glob.glob(search_day)
         sole_images = []
         if all_available:
@@ -137,11 +137,12 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         iii) Erode the edges of the raster (remove dark pixels)
     """
     paths = []
-    for burst in bursts_list:
+    for i, burst in enumerate(bursts_list):
         # REM: burst = bursts[1]
-        p = os.path.join(burst, f"*{polarity}.img")
+        print(f"{i}", end="")
+        p = os.path.join(burst, f"*{polarity}*.img")
         burst_file = glob.glob(p)[0]
-        image_name = os.path.basename(burst_file)[:-4] + ".tif"
+        image_name =  f"{i:02d}_"+ os.path.basename(burst_file)[:-4] + ".tif"
 
         out_burst = os.path.join(folder_pth, image_name)
         paths.append(out_burst)
@@ -262,18 +263,18 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT ------------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170301"
-    in_end = "20170307"
+    in_start = "20170101"
+    in_end = "20171231"
     in_step = 6
 
     in_type = "COH"  # COH or SIG
 
     # Source folder
-    in_src = "d:\\slc\\"
+    in_src = "o:\\ZRSVN_Travinje"
     # in_src = "t:\\ZRSVN_Travinje\\*"
 
     # Save location
-    in_save = "d:\\slc\\coherence"
+    in_save = "o:\\aitlas_slc"
     # ------------------------------------------------------------------------------
 
     result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save)
