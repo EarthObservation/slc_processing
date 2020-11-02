@@ -106,12 +106,14 @@ def find_individual_images(list_of_days, src, direction, dt):
         # For coherence first find the correct sub-folder
         if dt == "COH":
             one_month = one_day[:4] + "-" + one_day[4:6]
-            src_month = os.path.join(src, f"*{dt}*{one_month}*")
+            src_month = os.path.join(src, f"*{dt}*{one_month}")
         else:
             src_month = src
 
-        search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*.data")
+        search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*")
         all_available = glob.glob(search_day)
+        # This step filters out .dim files, so we are only left with folders
+        all_available = [fnm for fnm in all_available if not fnm.endswith('.dim')]
         sole_images = []
         if all_available:
             # FIND INDIVIDUAL IMAGES
@@ -142,7 +144,7 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         print(f"{i}", end="")
         p = os.path.join(burst, f"*{polarity}*.img")
         burst_file = glob.glob(p)[0]
-        image_name =  f"{i:02d}_"+ os.path.basename(burst_file)[:-4] + ".tif"
+        image_name = f"{i:02d}_" + os.path.basename(burst_file)[:-4] + ".tif"
 
         out_burst = os.path.join(folder_pth, image_name)
         paths.append(out_burst)
@@ -270,7 +272,7 @@ if __name__ == "__main__":
     in_type = "COH"  # COH or SIG
 
     # Source folder
-    in_src = "o:\\ZRSVN_Travinje"
+    in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
     # in_src = "t:\\ZRSVN_Travinje\\*"
 
     # Save location
