@@ -208,15 +208,20 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                 print(f"\n     Pre-processing {product}")
 
                 # Pre-process "bursts" for warping into a single image
+                # TODO: fill nodata (nodata lines that between some bursts)
+                # - use warp to set nodata
+                # - dilate "nodata area", e.i. cut edges to remove dark pixels
                 print(f"        - consists of {len(bursts)} bursts\n        ", end="")
                 to_be_warped = pre_process_bursts(bursts, polar, product_folder)
 
                 # WARP BURSTS INTO SINGLE IMAGE
                 out_image = os.path.join(product_folder, product + f"_{direct}_{polar}.tif")
                 print(f"\n        - warping into a single image")
+                # Resample to 10m using bilinear interpolation and align pixels to grid
                 gdal.Warp(out_image, to_be_warped,
                           xRes=10, yRes=10,
-                          dstNodata=0, targetAlignedPixels=True)
+                          dstNodata=0, targetAlignedPixels=True,
+                          resampleAlg=gdal.gdalconst.GRA_Bilinear)
 
                 # REMOVE TEMPORARY FILES ("bursts")
                 for file in to_be_warped:
