@@ -162,7 +162,6 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
     """
     paths = []
     for i, burst in enumerate(bursts_list):
-        # REM: burst = bursts[1]
         print(f"{i}", end="")
         p = os.path.join(burst, f"*{polarity}*.img")
         burst_file = glob.glob(p)[0]
@@ -174,12 +173,25 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         # Set all nodata to 0 (there are both 0 and nan values present)
         gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0)
 
-        # Remove dark pixels on the edge of each raster (erode by 10 pixels)
+        # Open raster for removing dark edges (erode by 10 pixels)
         r = gdal.Open(out_burst, gdal.GA_Update)
         raster_arr = np.array(r.GetRasterBand(1).ReadAsArray())
+        warp_iter = 10
 
+        # Test for nodata "stripes"
+        test_column = raster_arr[:, raster_arr.shape[1] // 2]  # Use column in the middle of frame
+        a_zeros = np.where(test_column == 0)[0]
+        a_groups = np.split(a_zeros, np.where(np.diff(a_zeros) != 1)[0] + 1)
+        if len(a_groups) > 2:
+            # Preform fill nodata on the array
+            gdal.FillNodata(r, maskBand=None, maxSearchDist=5,
+                            smoothingIterations=0, options=['COMPRESS=LZW'], callback=None)
+            raster_arr = np.array(r.GetRasterBand(1).ReadAsArray())
+            warp_iter += 5  # Take into account the added pixels
+
+        # Remove dark pixels on the edge of each raster
         nodata_mask = raster_arr == 0
-        dilated_mask = binary_dilation(nodata_mask, iterations=10)
+        dilated_mask = binary_dilation(nodata_mask, iterations=warp_iter)
         raster_arr[dilated_mask] = 0
 
         r.GetRasterBand(1).WriteArray(raster_arr)
@@ -292,7 +304,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170401"
+    in_start = "20170302" # 20170401
     in_end = "20171126"
     in_step = 6
 
