@@ -103,7 +103,9 @@ def make_save_folder(week_from_dict, dt, save_path):
     """Creates and returns path to a sub-folder for saving weekly products."""
     start_date = week_from_dict["start"].strftime("%Y%m%d")
     end_date = week_from_dict["end"].strftime("%Y%m%d")
-    save_name = f"weekly_{start_date}_{end_date}"
+    yr = week_from_dict["start"].strftime("%Y")[2:]
+    wk = week_from_dict["week"]
+    save_name = f"yr{yr}wk{wk:02}_SLC_{dt}_{start_date}_{end_date}_weekly"
     save_loc = os.path.join(save_path, save_name)
     os.makedirs(save_loc, exist_ok=True)
 
@@ -260,7 +262,9 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
             paths_for_composite = glob.glob(q)
 
             if paths_for_composite:
-                composite_name = f"{diw[0]}_SLC_{direct}_{polar}_{data_type}"
+                tww = this_week["week"]
+                composite_name = f"{diw[0]}_{diw[-1]}_weekly_SLC_{data_type}" \
+                                 f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
                 # This bbox is outline of SLO with 5 km buffer in EPSG:32633
                 bbox = [368930, 5024780, 627570, 5197200]
                 composite(
