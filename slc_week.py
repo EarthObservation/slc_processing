@@ -22,7 +22,7 @@ ii ) Find all files within a week
 iii) Filter for direction (ASC, DES) and polarization (VV, VH)
 iv ) Within one week find all files with the same timestamp
 v  ) Stitch together all time stamps into a single image
-vi ) Resample (nearest neighbor) and target aligned pixels to match with S-2 raster
+vi ) Resample (bilinear) and target aligned pixels to match with S-2 raster
 vii) Create mean weekly mosaic from all resampled images for that week
 """
 
@@ -44,6 +44,7 @@ class WeekList:
     weekly mosaics for S-1 SLC data.
     """
     def __init__(self, start, end, step):
+        # Boundary dates and time step (N-day week)
         self.start = start
         self.end = end
         self.step = step
@@ -193,10 +194,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
     my_weeks = WeekList(dt_start, dt_end, dt_step)
 
     # PROCESS FOR ONE WEEK
-    for this_i, this_week in enumerate(my_weeks.week_list):
-        # REM: this_week = my_weeks.week_list[0]
-        # REM: this_i = 0
-
+    for this_week in my_weeks.week_list:
         # CREATE NEW FOLDER FOR SAVING WEEKLY PRODUCTS
         week_path = make_save_folder(this_week, data_type, save_loc)
 
@@ -204,8 +202,12 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
         print(f"\nProcessing {os.path.basename(week_path)}")
 
         # LOOP OVER ALL 4 PRODUCT COMBINATIONS
-        # combinations = [("ASC", "VV"), ("ASC", "VH")]  # REM
-        combinations = [("DES", "VV"), ("DES", "VH"), ("ASC", "VV"), ("ASC", "VH")]
+        combinations = [
+            ("DES", "VV"),
+            ("DES", "VH"),
+            ("ASC", "VV"),
+            ("ASC", "VH")
+        ]
         for direct, polar in combinations:
             tta_combo = time.time()
             print(f"  Now processing combo: {direct} {polar}")
@@ -221,7 +223,6 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
             to_aggregate = find_individual_images(diw, src_folder, direct, data_type)
 
             # Process all individual images (warp to single file)
-            # REM: product = to_aggregate[0]
             for product, bursts in to_aggregate:
                 tta1 = time.time()
                 print(f"\n     Pre-processing {product}")
@@ -257,7 +258,6 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
             print(f"Creating composite for {direct} {polar} {data_type} in {diw[0]}")
             q = os.path.join(product_folder, "*.tif")
             paths_for_composite = glob.glob(q)
-            # print(paths_for_composite)  # REM
 
             if paths_for_composite:
                 composite_name = f"{diw[0]}_SLC_{direct}_{polar}_{data_type}"
@@ -269,7 +269,6 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                     composite_name,
                     "mean",
                     bbox)
-                # print(f"Making composite {composite_name}")  # REM
             else:
                 print("No images available for this week!")
 
