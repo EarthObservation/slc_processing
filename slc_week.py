@@ -48,38 +48,57 @@ class WeekList:
         self.end = end
         self.step = step
 
-        start_date = datetime.strptime(start, "%Y%m%d")
-        end_date = datetime.strptime(end, "%Y%m%d")
+        # Create a dictionary containing all N-day weeks in a selected year
+        current_year = start[:4]
+        start_yr = datetime.strptime(current_year + "0101", "%Y%m%d")
+        end_yr = datetime.strptime(current_year + "1231", "%Y%m%d")
+        st_dt = datetime.strptime(start, "%Y%m%d")
+        en_dt = datetime.strptime(end, "%Y%m%d")
 
-        interval_start = start_date
+        interval_start = start_yr
         week_no = 0
-        week_list = []
-        while interval_start <= end_date:
+        yr_wks = []
+        while interval_start <= end_yr:
             interval_end = interval_start + timedelta(days=step - 1)
+            # Set to 31-Dec if it overflows into the next year
+            if interval_end.year != int(current_year):
+                interval_end = end_yr
             week_no += 1
-            week_list.append({
+            yr_wks.append({
                 "week": week_no,
                 "start": interval_start,
                 "end": interval_end
             })
             interval_start += timedelta(days=step)
+        self.week_list_in_year = yr_wks
 
-        self.week_list = week_list
-        self.number_of_weeks = len(week_list)
+        # Filter out only the required weeks
+        sel_wks = [a for a in yr_wks if (a['start'] >= st_dt and
+                                         a['end'] <= en_dt)
+                   or (a['start'] <= st_dt <= a['end'])
+                   or (a['start'] >= en_dt >= a['end'])]
+        self.week_list = sel_wks
 
-    def days_in_week(self, w_no):
-        """Return a list of all days (string) contain in that week."""
-        one_week = self.week_list[w_no]
-        delta = one_week["end"] - one_week["start"]  # as timedelta
-        list_of_days = []
-        for i in range(delta.days + 1):
-            day = one_week["start"] + timedelta(days=i)
-            list_of_days.append(day.strftime("%Y%m%d"))
+        # Number of weeks selected for processing
+        self.number_of_weeks = len(sel_wks)
 
-        return list_of_days
+        # Number of weeks in a calendar year
+        self.number_of_weeks_in_year = len(yr_wks)
 
 
-def make_save_folder(week_from_dict, save_path):
+def days_in_week(one_week):
+    """Return a list of all days (string) contain in that week."""
+    # one_week = self.week_list[w_no]
+    delta = one_week["end"] - one_week["start"]  # as timedelta
+    list_of_days = []
+    for i in range(delta.days + 1):
+        day = one_week["start"] + timedelta(days=i)
+        list_of_days.append(day.strftime("%Y%m%d"))
+
+    return list_of_days
+
+
+def make_save_folder(week_from_dict, dt, save_path):
     """Creates and returns path to a sub-folder for saving weekly products."""
     start_date = week_from_dict["start"].strftime("%Y%m%d")
     end_date = week_from_dict["end"].strftime("%Y%m%d")
@@ -179,7 +198,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
         # REM: this_i = 0
 
         # CREATE NEW FOLDER FOR SAVING WEEKLY PRODUCTS
-        week_path = make_save_folder(this_week, save_loc)
+        week_path = make_save_folder(this_week, data_type, save_loc)
 
         tta_week = time.time()
         print(f"\nProcessing {os.path.basename(week_path)}")
@@ -196,7 +215,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
             os.makedirs(product_folder, exist_ok=True)
 
             # Filter list for dates within this week
-            diw = my_weeks.days_in_week(this_i)  # diw = Days In Week (list)
+            diw = days_in_week(this_week)  # diw = Days In Week (list)
 
             # Find individual images for that day
             to_aggregate = find_individual_images(diw, src_folder, direct, data_type)
