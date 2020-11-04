@@ -156,38 +156,58 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
     """Prepares input images (bursts) for processing and returns list of paths.
 
         For each burst:
-        i)   Sets path to pre-processed image
-        ii)  Deal with nodata (all nodata should be 0)
-        iii) Erode the edges of the raster (remove dark pixels)
+        1)  Sets path to pre-processed image
+        2)  Deal with nodata (all nodata should be 0)
+        3)  Test if there are any "nodata stripes" across the image
+        3a) If yes, then first erode by a couple pixels
+        3b) Use GDAL fill nodata to interpolate missing data
+        4)  Erode the edges of the raster (remove dark pixels)
     """
     paths = []
     for i, burst in enumerate(bursts_list):
         print(f"{i}", end="")
+
+        # Store paths of output, so they can be used in the nex step
         p = os.path.join(burst, f"*{polarity}*.img")
         burst_file = glob.glob(p)[0]
         image_name = f"{i:02d}_" + os.path.basename(burst_file)[:-4] + ".tif"
-
         out_burst = os.path.join(folder_pth, image_name)
         paths.append(out_burst)
 
         # Set all nodata to 0 (there are both 0 and nan values present)
         gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0)
 
-        # Open raster for removing dark edges (erode by 10 pixels)
-        r = gdal.Open(out_burst, gdal.GA_Update)
-        raster_arr = np.array(r.GetRasterBand(1).ReadAsArray())
-        warp_iter = 10
+        # Open raster for further processing
+        r = gdal.Open(out_burst, gdal.GA_Update)  # gdal.GA_Update: save output to the source file
+        raster_arr = r.GetRasterBand(1).ReadAsArray()
+        warp_iter = 10  # By default erode edges by 10 pixels
 
-        # Test for nodata "stripes"
-        test_column = raster_arr[:, raster_arr.shape[1] // 2]  # Use column in the middle of frame
+        # Test for nodata "stripes" (by reading a random column and counting nodata intervals
+        test_column = raster_arr[:, raster_arr.shape[1] // 2]
         a_zeros = np.where(test_column == 0)[0]
         a_groups = np.split(a_zeros, np.where(np.diff(a_zeros) != 1)[0] + 1)
+
+        # More than 2 nodata intervals means there is a nodata stripe present
         if len(a_groups) > 2:
+            # Find the width of nodata pixels
+            px_wid = len(a_groups[1])
+            # First erode by 3 pixels to remove dark pixels on edge of strip
+            nodata_mask = raster_arr == 0
+            dilated_mask = binary_dilation(nodata_mask, iterations=3)
+            raster_arr[dilated_mask] = 0
+
+            # Prepare raster band to be used by fill nodata
+            r.GetRasterBand(1).WriteArray(raster_arr)
+            raster_bnd = r.GetRasterBand(1)
             # Preform fill nodata on the array
-            gdal.FillNodata(r, maskBand=None, maxSearchDist=5,
-                            smoothingIterations=0, options=['COMPRESS=LZW'], callback=None)
-            raster_arr = np.array(r.GetRasterBand(1).ReadAsArray())
-            warp_iter += 5  # Take into account the added pixels
+            gdal.FillNodata(raster_bnd, maskBand=None, maxSearchDist=px_wid+3,
+                            smoothingIterations=0, options=['COMPRESS=LZW'],
+                            callback=None)
+
+            # Open band as array to be dilated in the next step
+            raster_arr = raster_bnd.ReadAsArray()
+            # Also erode pixels that were added with FillNodata
+            warp_iter += px_wid
 
         # Remove dark pixels on the edge of each raster
         nodata_mask = raster_arr == 0
@@ -242,8 +262,8 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                 print(f"\n     Pre-processing {product}")
 
                 # Pre-process "bursts" for warping into a single image
-                # TODO: fill nodata (nodata lines that between some bursts)
                 # - use warp to set nodata
+                # - fill nodata lines between some bursts
                 # - dilate "nodata area", e.i. cut edges to remove dark pixels
                 print(f"        - consists of {len(bursts)} bursts\n        ", end="")
                 to_be_warped = pre_process_bursts(bursts, polar, product_folder)
@@ -304,8 +324,8 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170302" # 20170401
-    in_end = "20171126"
+    in_start = "20170113"  # 20170401
+    in_end = "20170118"  # 20171126
     in_step = 6
 
     in_type = "COH"  # COH or SIG
