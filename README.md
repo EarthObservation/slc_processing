@@ -98,3 +98,13 @@ weekly folders:
             \20200108_20200113_SIG_DES_VH.tif
             \20200108_20200113_SIG_DES_VV.tif
 ```
+
+
+# USEFUL FOR DEBUGGING
+
+Weekly mosaic that contains "nodata" stripes
+```
+in_start = "20170113"
+in_end = "20170118"
+in_step = 6
+```
