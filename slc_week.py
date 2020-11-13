@@ -175,7 +175,7 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         paths.append(out_burst)
 
         # Set all nodata to 0 (there are both 0 and nan values present)
-        gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0)
+        gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0, multithread=True)
 
         # Open raster for further processing
         r = gdal.Open(out_burst, gdal.GA_Update)  # gdal.GA_Update: save output to the source file
@@ -275,7 +275,8 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                 gdal.Warp(out_image, to_be_warped,
                           xRes=10, yRes=10,
                           dstNodata=0, targetAlignedPixels=True,
-                          resampleAlg=gdal.gdalconst.GRA_Bilinear)
+                          resampleAlg=gdal.gdalconst.GRA_Bilinear,
+                          multithread=True)
 
                 # REMOVE TEMPORARY FILES ("bursts")
                 for file in to_be_warped:
