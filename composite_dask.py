@@ -19,6 +19,7 @@ import numpy as np
 import rasterio
 from affine import Affine
 from rasterio.windows import Window
+from tif2jpg import plot_preview
 
 
 # from osgeo import gdal
@@ -212,7 +213,7 @@ def image_offset(out_ext, src_ds):
     return rd_win, slicex, slicey
 
 
-def composite(src_fps, save_loc, save_nam, method="mean", bbox=None):
+def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default"):
     """"""
     # CREATE SAVE LOCATION
     os.makedirs(save_loc, exist_ok=True)
@@ -391,6 +392,9 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None):
 
     with rasterio.open(out_pth, "w", **out_meta) as dest:
         dest.write(comp_out)
+
+    # ADD JPEG PREVIEW FILE
+    plot_preview(comp_out, dt, out_pth[:-3] + "jpg")
 
     end_time = time.time()
     print(f"--- Time: {end_time-str_time} seconds ---")

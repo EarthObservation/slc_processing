@@ -305,7 +305,9 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                     week_path,
                     composite_name,
                     "mean",
-                    bbox)
+                    bbox,
+                    data_type
+                )
             else:
                 print("No images available for this week!")
 
