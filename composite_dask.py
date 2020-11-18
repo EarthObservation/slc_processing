@@ -393,11 +393,18 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
     with rasterio.open(out_pth, "w", **out_meta) as dest:
         dest.write(comp_out)
 
-    # ADD JPEG PREVIEW FILE
-    plot_preview(comp_out, dt, out_pth[:-3] + "jpg")
-
     end_time = time.time()
     print(f"--- Time: {end_time-str_time} seconds ---")
+
+    # ADD JPEG PREVIEW FILE
+    print("# Saving preview image to JPEG.")
+    try:
+        plot_preview(comp_out, dt, out_pth[:-3] + "jpg")
+    except MemoryError as me:
+        print("  Memory error occured, could not save to JPEG")
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
 
     t_tim_b = time.time()
     print(f"\n--- Total time: {t_tim_b - t_tim_a} seconds --- \n")

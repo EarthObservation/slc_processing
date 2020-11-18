@@ -327,8 +327,8 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170401"
-    in_end = "20171126"
+    in_start = "20190314"
+    in_end = "20191231"
     in_step = 6
 
     in_type = "SIG"  # COH or SIG
@@ -336,11 +336,12 @@ if __name__ == "__main__":
     # Source folder
     # in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
     # in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
-    in_src = "t:\\ZRSVN_Travinje_SI_sig_UTM33N_10m_coh_13.91m"
+    # in_src = "t:\\ZRSVN_Travinje_SI_sig_UTM33N_10m_coh_13.91m"
+    in_src = "r:\\Sentinel-1_SLC_ZRSVN_Travinje_SI_sigma_10m_UTM33N"
 
     # Save location
-    in_save = "d:\\aitlas_slc_test"
-    # in_save = "o:\\aitlas_slc"
+    # in_save = "d:\\aitlas_slc_test"
+    in_save = "o:\\aitlas_slc_SIGMA"
     # --------------------------------------------------------------------------
 
     result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save)
