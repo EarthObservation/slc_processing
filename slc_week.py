@@ -130,7 +130,8 @@ def find_individual_images(list_of_days, src, direction, dt):
             one_month = one_day[:4] + "-" + one_day[4:6]
             src_month = os.path.join(src, f"*{dt}*{one_month}")
         else:
-            src_month = os.path.join(src, "*")
+            one_year = one_day[:4]
+            src_month = os.path.join(src, f"*{dt}*{one_year}")
 
         search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*")
         all_available = glob.glob(search_day)
@@ -327,7 +328,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20190314"
+    in_start = "20190706"
     in_end = "20191231"
     in_step = 6
 
@@ -336,12 +337,13 @@ if __name__ == "__main__":
     # Source folder
     # in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
     # in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
-    # in_src = "t:\\ZRSVN_Travinje_SI_sig_UTM33N_10m_coh_13.91m"
-    in_src = "r:\\Sentinel-1_SLC_ZRSVN_Travinje_SI_sigma_10m_UTM33N"
+    # in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
+    in_src = "r:\\Sentinel-1_SLC_products_SI_sigma_10m_UTM33N"
 
     # Save location
     # in_save = "d:\\aitlas_slc_test"
-    in_save = "o:\\aitlas_slc_SIGMA"
+    # in_save = "o:\\aitlas_slc_SI_coherence"
+    in_save = "o:\\aitlas_slc_SI_sigma"
     # --------------------------------------------------------------------------
 
     result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save)

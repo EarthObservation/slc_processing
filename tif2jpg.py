@@ -76,8 +76,8 @@ def tif2jpg(path_in, typ):
 if __name__ == "__main__":
     type_slc = "COH"
 
-    # file_orig = "d:\\slc\\coherence\\weekly_20170301_20170306\\20170301_SLC_DES_VV_COH.tif"
-    # file_orig = "O:\\aitlas_slc_SIGMA\\yr17wk16_SLC_SIG_20170401_20170406_weekly\\20170401_20170406_weekly_SLC_SIG_ASC_VH_yr17wk16.tif"
-    my_file = "O:\\aitlas_slc_COHERENCE\\yr17wk16_SLC_COH_20170401_20170406_weekly\\20170401_20170406_weekly_SLC_COH_ASC_VH_yr17wk16.tif"
+    my_file = "d:\\slc\\coherence\\weekly_20170301_20170306\\20170301_SLC_DES_VV_COH.tif"
+    # my_file = "O:\\aitlas_slc_SIGMA\\yr17wk16_SLC_SIG_20170401_20170406_weekly\\20170401_20170406_weekly_SLC_SIG_ASC_VH_yr17wk16.tif"
+    # my_file = "O:\\aitlas_slc_COHERENCE\\yr17wk16_SLC_COH_20170401_20170406_weekly\\20170401_20170406_weekly_SLC_COH_ASC_VH_yr17wk16.tif"
 
     tif2jpg(my_file, type_slc)
