@@ -19,10 +19,8 @@ import numpy as np
 import rasterio
 from affine import Affine
 from rasterio.windows import Window
+
 from tif2jpg import plot_preview
-
-
-# from osgeo import gdal
 
 
 def round_multiple(nr, x_left, pix):
@@ -80,13 +78,13 @@ def output_image_extent(src_fps, bbox):
         Contains extents of and other metadata required for final image.
 
     """
-    str_time = time.time()
+    geo_ext_time = time.time()
+    print("# Evaluating geographical extents...")
 
     # Open TIF files as DataSets and evaluate properties
     tif_ext, pix_res, src_all, bnd_num = ([] for _ in range(4))
 
     for fp in src_fps:
-        print(f"# Opening raster {fp[109:-24]}")
         src = rasterio.open(fp)
         src_all.append(src)
 
@@ -145,8 +143,9 @@ def output_image_extent(src_fps, bbox):
               'pixels': (pix_x, pix_y)
               }
 
-    end_time = time.time() - str_time
-    print(f"# --- Time to evaluate geo. extents: {end_time} seconds ---")
+    # Time evaluating geo. extents
+    geo_ext_time = time.time() - geo_ext_time
+    print(f"#   time: {geo_ext_time:.2f} seconds")
     return output
 
 
@@ -241,15 +240,14 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
         out_meta = rst.profile.copy()
 
     # MAIN LOOP FOR COMPOSITING
-    t_tim_a = time.time()
     tmp_sav_pth = []
     for band in range(nr_bands):
         print(f"#\n# Creating composite for Band {band+1}")
         comp_stack = []
         # Loop all images
         for i, fp in enumerate(src_fps):
-            str_time = time.time()
-            print(f"#   Processing Image {i + 1}.")
+            img_time = time.time()
+            print(f"#   Processing Image {i + 1}")
 
             # Open data set
             src = rasterio.open(fp)
@@ -259,7 +257,7 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             chk_bbox = (x_l > x_r_out or y_d > y_u_out or
                         x_r < x_l_out or y_u < y_d_out)
             if chk_bbox:
-                print(f"#   Image {i} not included (out of bounds).")
+                print(f"#   Image {i} not included (out of bounds)!")
                 break
 
             # Calculate offset for reading and slicing
@@ -275,24 +273,27 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             comp_band = np.full((out_h, out_w), np.nan, dtype=np.float32)
 
             # Read image and save to pickle
-            print("#     Reading the image.")
+            print("#     Reading the image...")
             if band == 0:
                 tmp_read = src.read(window=offset)
                 for nc in range(1, nr_bands):
                     img_nam = ('img' + str(i+1).zfill(2) + "_b"
                                + str(nc+1).zfill(2) + '.p')
                     img_pth = os.path.join(sav_dir, img_nam)
-                    pickle.dump(tmp_read[nc], open(img_pth, "wb"))
+                    with open(img_pth, "wb") as pf:
+                        pickle.dump(tmp_read[nc], pf)
                 tmp_read = tmp_read[0]
             else:
                 img_nam = ('img' + str(i+1).zfill(2) + "_b"
                            + str(band+1).zfill(2) + '.p')
                 img_pth = os.path.join(sav_dir, img_nam)
-                tmp_read = pickle.load(open(img_pth, "rb"))
+                with open(img_pth, "rb") as pf:
+                    tmp_read = pickle.load(pf)
 
             # Apply nodata mask
             nodata_mask = tmp_read == 0
             tmp_read[nodata_mask] = np.nan
+            nodata_mask = None
 
             # Read the image into the array
             comp_band[sl_y[0]:sl_y[1], sl_x[0]:sl_x[1]] = tmp_read
@@ -309,15 +310,17 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             # noinspection PyUnusedLocal
             comp_band = None
 
-            end_time = time.time()
-            print(f"#   --- Time: {end_time-str_time} seconds ---")
+            # Time processing single image
+            img_time = time.time() - img_time
+            print(f"#     Time: {img_time:.2f} seconds")
 
         # Stack all images into 1 array
         stacked = da.stack(comp_stack, axis=0)
+        comp_stack = None
 
         # Calculate composite for selected method with dask
         print(f"# Compositing Band {band+1}")
-        str_time = time.time()
+        bnd_time = time.time()
         if method == 'mean':
             comp_out = da.nanmean(stacked, axis=0, keepdims=True).compute()
         elif method == 'median':
@@ -329,8 +332,8 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
         else:
             raise Exception('{} is not a valid compositing '
                             'method!'.format(method))
-        end_time = time.time()
-        print(f"# --- Time: {end_time-str_time} seconds ---")
+        bnd_time = time.time() - bnd_time
+        print(f"#   Band {band+1} time: {bnd_time:.2f} seconds")
 
         # After one band is resolved, save to temp file and release memory by
         # deleting the array
@@ -341,7 +344,8 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             # Create file name and save using pickle
             sav_fil = 'b_' + str(band+1).zfill(2) + '.p'
             sav_pth = os.path.join(sav_dir, sav_fil)
-            pickle.dump(comp_out, open(sav_pth, "wb"))
+            with open(sav_pth, "wb") as pf:
+                pickle.dump(comp_out, pf)
 
             # Add to savePth list with filenames
             tmp_sav_pth.append(sav_pth)
@@ -349,33 +353,31 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             #  Clean up workspace
             comp_out = None
 
-        t_tim_b = time.time()
-        print(f"--- Total time: {t_tim_b - t_tim_a} seconds --- \n")
-
     # ----------------------------------------------------------------------------
     # OUT OF THE COMPOSITE LOOP RESTORE SAVED FILES AND BUILD TIF
     # ----------------------------------------------------------------------------
     if nr_bands > 1:
 
         print("# Restoring saved bands.")
-        str_time = time.time()
+        rst_time = time.time()
 
         # Initiate output array
         comp_out = np.full((nr_bands, out_h, out_w), np.nan, dtype=np.float32)
 
         for bnd, pth in enumerate(tmp_sav_pth):
-            comp_out[bnd, :, :] = pickle.load(open(pth, "rb"))
+            with open(pth, "rb") as pf:
+                comp_out[bnd, :, :] = pickle.load(pf)
 
         # Remove temporary folder
         rmtree(sav_dir, ignore_errors=True)
-        end_time = time.time()
-        print(f"--- Time: {end_time-str_time} seconds ---")
+        rst_time = time.time() - rst_time
+        print(f"   Restoration time: {rst_time:.2f} seconds")
 
     # ----------------------------------------------------------------------------
     # SAVE RESULTS TO TIF
     # ----------------------------------------------------------------------------
-    print("# Saving composite image to TIFF.")
-    str_time = time.time()
+    print("#\n# Saving composite image to TIFF.")
+    tif_time = time.time()
 
     # Save composite
     out_nam = save_nam + ".tif"
@@ -393,21 +395,28 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
     with rasterio.open(out_pth, "w", **out_meta) as dest:
         dest.write(comp_out)
 
-    end_time = time.time()
-    print(f"--- Time: {end_time-str_time} seconds ---")
+    tif_time = time.time() - tif_time
+    print(f"#  Time (TIFF): {tif_time:.2f} seconds")
+
+    jpg_time = time.time()
+    print("#\n# Saving preview image to JPEG.")
+    # Pickle array for passing it to plot_preview()
+    spt = os.path.join(save_loc, "temp_array.p")
+    with open(spt, "wb") as pf:
+        pickle.dump(comp_out, pf)
+    comp_out = None
 
     # ADD JPEG PREVIEW FILE
-    print("# Saving preview image to JPEG.")
     try:
-        plot_preview(comp_out, dt, out_pth[:-3] + "jpg")
+        plot_preview(spt, dt, out_pth[:-3] + "jpg")
     except MemoryError as me:
-        print("  Memory error occured, could not save to JPEG")
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        raise
-
-    t_tim_b = time.time()
-    print(f"\n--- Total time: {t_tim_b - t_tim_a} seconds --- \n")
+        print("#  Memory error occurred, could not save to JPEG")
+        print(me)
+    finally:
+        # delete pickle
+        os.remove(spt)
+    jpg_time = time.time() - jpg_time
+    print(f"#  Time (JPEG): {jpg_time:.2f} seconds")
 
 
 if __name__ == "__main__":
@@ -432,4 +441,8 @@ if __name__ == "__main__":
               'd:\\slc\\coherence\\week_01__20170301\\DES_VV\\20170306T051829_S1A_91F4_DES_VV.tif',
               'd:\\slc\\coherence\\week_01__20170301\\DES_VV\\20170306T051854_S1A_2222_DES_VV.tif']
 
+    # Run composite with timer
+    t_tim_b = time.time()
     composite(in_fps, in_save_loc, in_save_nam, in_method)
+    t_tim_b = time.time() - t_tim_b
+    print(f"\n~~~~~ Total time: {t_tim_b:.2f} seconds ~~~~~\n")

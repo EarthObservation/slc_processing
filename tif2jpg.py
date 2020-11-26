@@ -1,7 +1,9 @@
-import rasterio
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+import pickle
 from os.path import dirname, basename, join
+
+import matplotlib.pyplot as plt
+import rasterio
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def set_type(typ):
@@ -22,7 +24,8 @@ def set_type(typ):
     return typ_long, v_min, v_max
 
 
-def plot_preview(array, typ, save_path):
+def plot_preview(array_pickle, typ, save_path):
+    array = pickle.load(open(array_pickle, "rb"))
     array = array.squeeze()
 
     # Set some parameters for plotting
