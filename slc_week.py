@@ -176,7 +176,8 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         paths.append(out_burst)
 
         # Set all nodata to 0 (there are both 0 and nan values present)
-        gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0, multithread=True)
+        ds = gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0, multithread=True)
+        ds = None
 
         # Open raster for further processing
         r = gdal.Open(out_burst, gdal.GA_Update)  # gdal.GA_Update: save output to the source file
@@ -201,9 +202,10 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
             r.GetRasterBand(1).WriteArray(raster_arr)
             raster_bnd = r.GetRasterBand(1)
             # Preform fill nodata on the array
-            gdal.FillNodata(raster_bnd, maskBand=None, maxSearchDist=px_wid+3,
-                            smoothingIterations=0, options=['COMPRESS=LZW'],
-                            callback=None)
+            ds = gdal.FillNodata(raster_bnd, maskBand=None, maxSearchDist=px_wid+3,
+                                 smoothingIterations=0, options=['COMPRESS=LZW'],
+                                 callback=None)
+            ds = None
 
             # Open band as array to be dilated in the next step
             raster_arr = raster_bnd.ReadAsArray()
@@ -273,11 +275,12 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                 out_image = os.path.join(product_folder, product + f"_{direct}_{polar}.tif")
                 print(f"\n        - warping into a single image")
                 # Resample to 10m using bilinear interpolation and align pixels to grid
-                gdal.Warp(out_image, to_be_warped,
-                          xRes=10, yRes=10,
-                          dstNodata=0, targetAlignedPixels=True,
-                          resampleAlg=gdal.gdalconst.GRA_Bilinear,
-                          multithread=True)
+                ds = gdal.Warp(out_image, to_be_warped,
+                               xRes=10, yRes=10,
+                               dstNodata=0, targetAlignedPixels=True,
+                               resampleAlg=gdal.gdalconst.GRA_Bilinear,
+                               multithread=True)
+                ds = None
 
                 # REMOVE TEMPORARY FILES ("bursts")
                 for file in to_be_warped:
