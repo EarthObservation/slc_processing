@@ -130,7 +130,8 @@ def find_individual_images(list_of_days, src, direction, dt):
             one_month = one_day[:4] + "-" + one_day[4:6]
             src_month = os.path.join(src, f"*{dt}*{one_month}")
         else:
-            src_month = src
+            one_year = one_day[:4]
+            src_month = os.path.join(src, f"*{dt}*{one_year}")
 
         search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*")
         all_available = glob.glob(search_day)
@@ -165,7 +166,7 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
     """
     paths = []
     for i, burst in enumerate(bursts_list):
-        print(f"{i}", end="")
+        print(f"{i+1}", end="")
 
         # Store paths of output, so they can be used in the nex step
         p = os.path.join(burst, f"*{polarity}*.img")
@@ -175,7 +176,8 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
         paths.append(out_burst)
 
         # Set all nodata to 0 (there are both 0 and nan values present)
-        gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0)
+        ds = gdal.Warp(out_burst, burst_file, srcNodata=np.nan, dstNodata=0, multithread=True)
+        ds = None
 
         # Open raster for further processing
         r = gdal.Open(out_burst, gdal.GA_Update)  # gdal.GA_Update: save output to the source file
@@ -200,9 +202,10 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
             r.GetRasterBand(1).WriteArray(raster_arr)
             raster_bnd = r.GetRasterBand(1)
             # Preform fill nodata on the array
-            gdal.FillNodata(raster_bnd, maskBand=None, maxSearchDist=px_wid+3,
-                            smoothingIterations=0, options=['COMPRESS=LZW'],
-                            callback=None)
+            ds = gdal.FillNodata(raster_bnd, maskBand=None, maxSearchDist=px_wid+3,
+                                 smoothingIterations=0, options=['COMPRESS=LZW'],
+                                 callback=None)
+            ds = None
 
             # Open band as array to be dilated in the next step
             raster_arr = raster_bnd.ReadAsArray()
@@ -243,7 +246,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
             ("ASC", "VH")
         ]
         for direct, polar in combinations:
-            tta_combo = time.time()
+            t_combo = time.time()
             print(f"  Now processing combo: {direct} {polar}")
 
             # Create folder for saving
@@ -272,28 +275,32 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                 out_image = os.path.join(product_folder, product + f"_{direct}_{polar}.tif")
                 print(f"\n        - warping into a single image")
                 # Resample to 10m using bilinear interpolation and align pixels to grid
-                gdal.Warp(out_image, to_be_warped,
-                          xRes=10, yRes=10,
-                          dstNodata=0, targetAlignedPixels=True,
-                          resampleAlg=gdal.gdalconst.GRA_Bilinear)
+                ds = gdal.Warp(out_image, to_be_warped,
+                               xRes=10, yRes=10,
+                               dstNodata=0, targetAlignedPixels=True,
+                               resampleAlg=gdal.gdalconst.GRA_Bilinear,
+                               multithread=True)
+                ds = None
 
                 # REMOVE TEMPORARY FILES ("bursts")
                 for file in to_be_warped:
                     os.remove(file)
 
                 tta1 = time.time() - tta1
-                print(f"     --- Time: {tta1} sec. ---")
+                print(f"        [Time (individual image): {tta1:.2f} sec.]")
 
-            tta_combo = time.time() - tta_combo
-            print(f"  --- Time for combo {direct} {polar}: {tta_combo} sec. ---")
+            t_combo = time.time() - t_combo
+            print(f"\n  Finished combo {direct} {polar} in {t_combo:.2f} sec.")
 
             # CREATE COMPOSITE
             tta2 = time.time()
-            print(f"Creating composite for {direct} {polar} {data_type} in {diw[0]}")
+
+            # Create a list of all products to be composited
             q = os.path.join(product_folder, "*.tif")
             paths_for_composite = glob.glob(q)
 
             if paths_for_composite:
+                print(f"\nCreating composite for {direct} {polar} {data_type} in {diw[0]}")
                 tww = this_week["week"]
                 composite_name = f"{diw[0]}_{diw[-1]}_weekly_SLC_{data_type}" \
                                  f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
@@ -304,19 +311,21 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
                     week_path,
                     composite_name,
                     "mean",
-                    bbox)
+                    bbox,
+                    data_type
+                )
+                tta2 = time.time() - tta2
+                print(f"#\n# Time (composite + preview file): {tta2:.2f} sec.\n")
             else:
-                print("No images available for this week!")
-
-            tta2 = time.time() - tta2
-            print(f"--- Time: {tta2} sec. ---")
+                print("\nNo images available for this combo!\n# SKIPPED!\n")
 
             # Remove temporary folder
             rmtree(product_folder, ignore_errors=True)
 
+        # Print time for processing one week
         tta_week = time.time() - tta_week
         tw = this_week["start"].strftime("%Y%m%d")
-        print(f"--- Time for week {tw}: {tta_week} sec. ---")
+        print(f"~~~~ Time for week {tw}: {tta_week:.2f} sec. ~~~~")
 
     return "\n################ Finished processing! ################"
 
@@ -324,20 +333,24 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170401"
-    in_end = "20171126"
+    in_start = "20170301"
+    in_end = "20170301"
+    # in_start = "20190706"
+    # in_end = "20191231"
     in_step = 6
 
     in_type = "COH"  # COH or SIG
 
     # Source folder
-    # in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
-    in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
-    # in_src = "t:\\ZRSVN_Travinje\\*"
+    in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
+    # in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
+    # in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
+    # in_src = "r:\\Sentinel-1_SLC_products_SI_sigma_10m_UTM33N"
 
     # Save location
-    # in_save = "d:\\aitlas_slc"
-    in_save = "o:\\aitlas_slc"
+    in_save = "d:\\aitlas_slc_test"
+    # in_save = "o:\\aitlas_slc_SI_coherence"
+    # in_save = "o:\\aitlas_slc_SI_sigma"
     # --------------------------------------------------------------------------
 
     result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save)
