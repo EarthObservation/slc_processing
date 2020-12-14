@@ -131,10 +131,11 @@ def check_asf(aoi, src_pth, copy_to_folder, year, month=None):
     # MOVE FILES TO DK FOLDER
     if files_not_needed:
         logfile.write("The following files have been moved:\n")
-        for undesired in files_not_needed:
+        for i, undesired in enumerate(files_not_needed):
             q = join(src_pth, f"*{undesired}*.zip")
             src = glob.glob(q)[0]
             dst = join(copy_to_folder, basename(src))
+            print(f"Moving file {i+1}/{len(files_not_needed)}")
             try:
                 shutil.move(src, dst)
             except shutil.Error as err:
@@ -166,19 +167,19 @@ if __name__ == "__main__":
 
     # Folder containing downloaded files
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2017"
-    # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2018-08"
+    in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-08-12"
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-08-12"
-    in_src_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
+    # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
 
     # Where to move files that are not in the desired AOI:
     # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
-    # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2018"
+    in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2019"
     # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2019"
-    in_sur_pth = "r:\\Sentinel-1_SLC_to_delete"
+    # in_sur_pth = "r:\\Sentinel-1_SLC_to_delete"
 
-    in_polygon = denmark
-    in_year = 2017
-    in_month = 1  # Set month to None to search entire year
+    in_polygon = netherlands
+    in_year = 2019
+    in_month = 12  # Set month to None to search entire year
 
     out = check_asf(in_polygon, in_src_pth, in_sur_pth, in_year, in_month)
     print(out)
