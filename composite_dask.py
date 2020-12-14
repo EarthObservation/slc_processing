@@ -82,18 +82,19 @@ def output_image_extent(src_fps, bbox):
     print("# Evaluating geographical extents...")
 
     # Open TIF files as DataSets and evaluate properties
-    tif_ext, pix_res, src_all, bnd_num = ([] for _ in range(4))
+    tif_ext = []
+    pix_res = []
+    # src_all = []
+    bnd_num = []
 
     for fp in src_fps:
-        src = rasterio.open(fp)
-        src_all.append(src)
+        with rasterio.open(fp) as src:
+            # src_all.append(src)
 
-        # Read raster properties
-        tif_ext.append([i for i in src.bounds])  # left, bottom, right, top
-        pix_res.append(src.res)
-        bnd_num.append(src.count)
-
-        src.close()
+            # Read raster properties
+            tif_ext.append([i for i in src.bounds])  # left, bottom, right, top
+            pix_res.append(src.res)
+            bnd_num.append(src.count)
 
     # Check if all images have the same pixel size
     is_list_uniform(pix_res, 'Pixel size of input images not matching.')
@@ -213,7 +214,17 @@ def image_offset(out_ext, src_ds):
 
 
 def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default"):
-    """"""
+    """
+
+
+    :param src_fps: list of paths
+    :param save_loc:
+    :param save_nam:
+    :param method:
+    :param bbox:
+    :param dt:
+    :return:
+    """
     # CREATE SAVE LOCATION
     os.makedirs(save_loc, exist_ok=True)
 
@@ -249,65 +260,58 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
             img_time = time.time()
             print(f"#   Processing Image {i + 1}")
 
-            # Open data set
-            src = rasterio.open(fp)
+            # Open raster and read the correct subset of the image
+            with rasterio.open(fp) as src:
+                # Skip Reading the image if bbox is out of bounds
+                x_l, y_d, x_r, y_u = [xy for xy in src.bounds]
+                chk_bbox = (x_l > x_r_out or y_d > y_u_out or
+                            x_r < x_l_out or y_u < y_d_out)
+                if chk_bbox:
+                    print(f"#   Image {i} not included (out of bounds)!")
+                    break
 
-            # Skip Reading the image if bbox is out of bounds
-            x_l, y_d, x_r, y_u = [xy for xy in src.bounds]
-            chk_bbox = (x_l > x_r_out or y_d > y_u_out or
-                        x_r < x_l_out or y_u < y_d_out)
-            if chk_bbox:
-                print(f"#   Image {i} not included (out of bounds)!")
-                break
+                # Calculate offset for reading and slicing
+                win, sl_x, sl_y = image_offset(out_extents, src)
 
-            # Calculate offset for reading and slicing
-            win, sl_x, sl_y = image_offset(out_extents, src)
+                # Set offset Window for reading of TIF subset
+                offset = win
 
-            # ------------------------------
-            # Read image and store to pickle
-            # ------------------------------
-            # Set offset Window for reading of TIF subset
-            offset = win
+                # Initiate array for output
+                comp_band = np.full((out_h, out_w), np.nan, dtype=np.float32)
 
-            # Initiate array for output
-            comp_band = np.full((out_h, out_w), np.nan, dtype=np.float32)
-
-            # Read image and save to pickle
-            print("#     Reading the image...")
-            if band == 0:
-                tmp_read = src.read(window=offset)
-                for nc in range(1, nr_bands):
+                # Read image and save to pickle
+                print("#     Reading the image...")
+                if band == 0:
+                    tmp_read = src.read(window=offset)
+                    for nc in range(1, nr_bands):
+                        img_nam = ('img' + str(i+1).zfill(2) + "_b"
+                                   + str(nc+1).zfill(2) + '.p')
+                        img_pth = os.path.join(sav_dir, img_nam)
+                        with open(img_pth, "wb") as pf:
+                            pickle.dump(tmp_read[nc], pf)
+                    tmp_read = tmp_read[0]
+                else:
                     img_nam = ('img' + str(i+1).zfill(2) + "_b"
-                               + str(nc+1).zfill(2) + '.p')
+                               + str(band+1).zfill(2) + '.p')
                     img_pth = os.path.join(sav_dir, img_nam)
-                    with open(img_pth, "wb") as pf:
-                        pickle.dump(tmp_read[nc], pf)
-                tmp_read = tmp_read[0]
-            else:
-                img_nam = ('img' + str(i+1).zfill(2) + "_b"
-                           + str(band+1).zfill(2) + '.p')
-                img_pth = os.path.join(sav_dir, img_nam)
-                with open(img_pth, "rb") as pf:
-                    tmp_read = pickle.load(pf)
+                    with open(img_pth, "rb") as pf:
+                        tmp_read = pickle.load(pf)
 
-            # Apply nodata mask
-            nodata_mask = tmp_read == 0
-            tmp_read[nodata_mask] = np.nan
-            nodata_mask = None
+                # Apply nodata mask
+                nodata_mask = tmp_read == 0
+                tmp_read[nodata_mask] = np.nan
+                nodata_mask = None
 
-            # Read the image into the array
-            comp_band[sl_y[0]:sl_y[1], sl_x[0]:sl_x[1]] = tmp_read
+                # Read the image into the array
+                comp_band[sl_y[0]:sl_y[1], sl_x[0]:sl_x[1]] = tmp_read
 
-            # Cleanup arrays
-            # noinspection PyUnusedLocal
-            tmp_read = None
-            src.close()
+                # Cleanup arrays
+                tmp_read = None
 
             # Stack comp_band array into Dask Array
             comp_stack.append(da.from_array(comp_band, chunks=(1024, 1024)))
 
             # Close the array to save memory
-            # noinspection PyUnusedLocal
             comp_band = None
 
             # Time processing single image
@@ -332,6 +336,7 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
         else:
             raise Exception('{} is not a valid compositing '
                             'method!'.format(method))
+        stacked = None
         bnd_time = time.time() - bnd_time
         print(f"#   Band {band+1} time: {bnd_time:.2f} seconds")
 
