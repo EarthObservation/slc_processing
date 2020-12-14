@@ -224,7 +224,8 @@ def pre_process_bursts(bursts_list, polarity, folder_pth):
     return paths
 
 
-def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
+def get_weekly_slc(dt_start, dt_end, dt_step, data_type,
+    src_folder, save_loc, combinations=None):
     # Create object for finding time intervals for processing
     my_weeks = WeekList(dt_start, dt_end, dt_step)
 
@@ -237,12 +238,13 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
         print(f"\nProcessing {os.path.basename(week_path)}")
 
         # LOOP OVER ALL 4 PRODUCT COMBINATIONS
-        combinations = [
-            ("DES", "VV"),
-            ("DES", "VH"),
-            ("ASC", "VV"),
-            ("ASC", "VH")
-        ]
+        if combinations is None:
+            combinations = [
+                ("DES", "VV"),
+                ("DES", "VH"),
+                ("ASC", "VV"),
+                ("ASC", "VH")
+            ]
         for direct, polar in combinations:
             t_combo = time.time()
             print(f"  Now processing combo: {direct} {polar}")
@@ -330,25 +332,32 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type, src_folder, save_loc):
 if __name__ == "__main__":
     # ----- INPUT --------------------------------------------------------------
     # Create list of weekly intervals (6 days per week)
-    in_start = "20170301"
-    in_end = "20170301"
-    # in_start = "20190706"
-    # in_end = "20191231"
+    # in_start = "20170301"
+    # in_end = "20170301"
+    in_start = "20170320"
+    in_end = "20170331"
     in_step = 6
 
     in_type = "COH"  # COH or SIG
 
+    in_comb = None  # [("ASC", "VH")]  
+    # combinations = [
+    #   ("DES", "VV"),
+    #   ("DES", "VH"),
+    #   ("ASC", "VV"),
+    #   ("ASC", "VH")
+    # ]
+
     # Source folder
-    in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
-    # in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
-    # in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
+    # in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
+    in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
     # in_src = "r:\\Sentinel-1_SLC_products_SI_sigma_10m_UTM33N"
 
     # Save location
-    in_save = "d:\\aitlas_slc_test"
-    # in_save = "o:\\aitlas_slc_SI_coherence"
+    # in_save = "d:\\aitlas_slc_test"
+    in_save = "o:\\aitlas_slc_SI_coherence"
     # in_save = "o:\\aitlas_slc_SI_sigma"
     # --------------------------------------------------------------------------
 
-    result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save)
+    result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save, in_comb)
     print(result)
