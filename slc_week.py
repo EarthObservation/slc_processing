@@ -351,16 +351,8 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
                 tww = this_week["week"]
                 composite_name = f"{diw[0]}_{diw[-1]}_weekly_SLC_{data_type}" \
                                  f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
-
-                # TODO: All images will already be cropped, so no need to ask for bbox
-                composite(
-                    paths_for_composite,
-                    week_path,
-                    composite_name,
-                    "mean",
-                    bbox,
-                    data_type
-                )
+                composite(paths_for_composite, week_path, composite_name,
+                          method="mean", dt=data_type)
                 tta2 = time.time() - tta2
                 print(f"#\n# Time (composite + preview file): {tta2:.2f} sec.\n")
             else:
@@ -382,8 +374,8 @@ if __name__ == "__main__":
     # Create list of weekly intervals (6 days per week)
     # in_start = "20170301"
     # in_end = "20170301"
-    in_start = "20170320"
-    in_end = "20170325"
+    in_start = "20170308"
+    in_end = "20171231"
     in_step = 6
 
     in_type = "SIG"  # COH or SIG
@@ -394,7 +386,7 @@ if __name__ == "__main__":
     # bbox for Netherlands in EPSG:28992
     in_bbox = [0, 305400, 287100, 625100]
 
-    in_comb = [("DES", "VV")]
+    in_comb = None
     # combinations = [
     #   ("DES", "VV"),
     #   ("DES", "VH"),
@@ -411,11 +403,11 @@ if __name__ == "__main__":
     in_src = "r:\\Sentinel-1_SLC_products_AiTLAS_NL_sigma_10m_Amersfoort"
 
     # Save location
-    in_save = "d:\\aitlas_slc_test_NL"
+    # in_save = "d:\\aitlas_slc_test_NL"
     # in_save = "o:\\aitlas_slc_SI_coherence"
     # in_save = "o:\\aitlas_slc_SI_sigma"
     # in_save = "o:\\aitlas_slc_NL_coherence"
-    # in_save = "o:\\aitlas_slc_NL_sigma"
+    in_save = "o:\\aitlas_slc_NL_sigma"
     # --------------------------------------------------------------------------
 
     result = loop_weeks(in_start, in_end, in_step, in_bbox,
