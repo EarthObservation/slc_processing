@@ -13,14 +13,36 @@ import pickle
 import time
 
 import dask.array as da
+import numpy as np
 import rasterio
 import xarray as xr
 
 from tif2jpg import plot_preview
 
 
-def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default"):
-    """"""
+def composite(src_fps, save_loc, save_nam, method="mean", dt="default"):
+    """Creates a composite from multiple rasters. Individual rasters have to be
+    of the same size (extents, pixel size, data type). Multiple compositing
+    are available, including mean, min, max, median etc.
+
+    Parameters
+    ----------
+    src_fps : list(str)
+        List of paths to source files.
+    save_loc : str
+        Path to save folder.
+    save_nam : str
+        Name of the file to be saved.
+    method : str
+        Compositing method, either "mean", "min", "max" or "median".
+    dt : str(optional)
+        Orbit direction, either "DES" or "ASC" (required for generating
+        previews).
+
+    Returns
+    -------
+
+    """
     # Make sure save location exists
     os.makedirs(save_loc, exist_ok=True)
 
@@ -33,10 +55,9 @@ def composite(src_fps, save_loc, save_nam, method="mean", bbox=None, dt="default
     chunks = {'band': 1, 'x': 1024, 'y': 1024}
     lazy_arrays = [xr.open_rasterio(fp, chunks=chunks) for fp in src_fps]
     stacked = da.concatenate(lazy_arrays, axis=0)
-
+    stacked[stacked == 0] = np.nan
     # Calculate composite for selected method with dask
     print(f"# Compositing ({method}) using Dask...")
-    bnd_time = time.time()
     if method == 'mean':
         comp_out = da.nanmean(stacked, axis=0, keepdims=True).compute()
     elif method == 'median':
@@ -94,11 +115,7 @@ if __name__ == "__main__":
     in_method = 'mean'
 
     in_save_loc = ".\\composite_test_01"
-    in_save_nam = "test_02"
-
-    # bbox = None
-    #        # xL    # yD    # xR    # yU
-    in_bbox = [0, 305400, 287100, 625100]
+    in_save_nam = "test_03"
 
     # List of paths to input files
     in_fps = ["C:\\Users\\ncoz\\GitHub\\slc_processing\\tmp2\\one_image_38C8_ASC_VV.tif",
