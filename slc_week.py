@@ -306,8 +306,7 @@ def get_weekly_slc(dt_start, dt_end, dt_step, data_type,
                 tww = this_week["week"]
                 composite_name = f"{diw[0]}_{diw[-1]}_weekly_SLC_{data_type}" \
                                  f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
-                # This bbox is outline of SLO with 5 km buffer in EPSG:32633
-                bbox = [368930, 5024780, 627570, 5197200]
+
                 composite(
                     paths_for_composite,
                     week_path,
@@ -341,9 +340,14 @@ if __name__ == "__main__":
     in_end = "20170331"
     in_step = 6
 
-    in_type = "COH"  # COH or SIG
+    in_type = "SIG"  # COH or SIG
 
-    in_comb = None  # [("ASC", "VH")]  
+    # This bbox is outline of SLO with 5 km buffer in EPSG:32633
+    # bbox = [368930, 5024780, 627570, 5197200]
+    # Bbox for Netherlands in EPSG:28992
+    in_bbox = [0, 305400, 287100, 625100]
+
+    in_comb = None
     # combinations = [
     #   ("DES", "VV"),
     #   ("DES", "VH"),
@@ -353,14 +357,21 @@ if __name__ == "__main__":
 
     # Source folder
     # in_src = "d:\\slc\\S1_SLC_processing_COHERENCE_2017-03"
-    in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
+    # in_src = "o:\\ZRSVN_Travinje_SI_coh_UTM33N_13.91m"
+    # in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
     # in_src = "r:\\Sentinel-1_SLC_products_SI_sigma_10m_UTM33N"
+    # in_src = "r:\\Sentinel-1_SLC_products_AiTLAS_NL_coh_10m_Amersfoort"
+    in_src = "r:\\Sentinel-1_SLC_products_AiTLAS_NL_sigma_10m_Amersfoort"
 
     # Save location
     # in_save = "d:\\aitlas_slc_test"
-    in_save = "o:\\aitlas_slc_SI_coherence"
+    # in_save = "o:\\aitlas_slc_SI_coherence"
     # in_save = "o:\\aitlas_slc_SI_sigma"
+    # in_save = "o:\\aitlas_slc_NL_coherence"
+    in_save = "o:\\aitlas_slc_NL_sigma"
     # --------------------------------------------------------------------------
 
+    # TODO: Which one is correct?
     result = get_weekly_slc(in_start, in_end, in_step, in_type, in_src, in_save, in_comb)
+    result = get_weekly_slc(in_start, in_end, in_step, in_bbox, in_type, in_src, in_save)
     print(result)
