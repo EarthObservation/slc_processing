@@ -285,7 +285,8 @@ def make_individual_rasters(to_aggregate, bbox, direct, polar, tmp_folder):
                        xRes=10, yRes=10,
                        dstNodata=0, targetAlignedPixels=True,
                        resampleAlg=gdal.gdalconst.GRA_Bilinear,
-                       multithread=True, outputBounds=bbox)
+                       multithread=True, outputBounds=bbox,
+                       options=['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512'])
         ds = None
 
         # REMOVE TEMPORARY FILES ("bursts")
