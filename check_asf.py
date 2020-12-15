@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     # Folder containing downloaded files
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2017"
-    in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-08-12"
+    in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-02"
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-08-12"
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
     in_polygon = netherlands
     in_year = 2019
-    in_month = 12  # Set month to None to search entire year
+    in_month = 2  # Set month to None to search entire year
 
     out = check_asf(in_polygon, in_src_pth, in_sur_pth, in_year, in_month)
     print(out)
