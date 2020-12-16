@@ -56,9 +56,9 @@ def tif2jpg(path_in):
     file_orig = path_in
     file_save = join(dirname(path_in), "preview_" + basename(path_in)[:-3] + "jpg")
 
-    file_save = ".\\test_jpg\\" + basename(path_in)[:-3] + "jpg"
+    # file_save = ".\\test_jpg\\" + basename(path_in)[:-3] + "jpg"
 
-    img_title = basename(path_in)[:-3]
+    img_title = basename(path_in)[:-4]
 
     # Open file and read array
     with rasterio.open(file_orig, "r") as src:
@@ -98,7 +98,7 @@ def batch_convert(folder):
     q = join(folder, "*", "*.tif")
     paths = glob.glob(q)
 
-    for i, tif in enumerate(paths[100:103]):
+    for i, tif in enumerate(paths):
         jpg = tif[:-3] + "jpg"
         if not isfile(jpg):
             name = basename(tif)
