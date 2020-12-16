@@ -374,7 +374,7 @@ if __name__ == "__main__":
     # Create list of weekly intervals (6 days per week)
     # in_start = "20170301"
     # in_end = "20170301"
-    in_start = "20170308"
+    in_start = "20170419"
     in_end = "20171231"
     in_step = 6
 

@@ -17,7 +17,7 @@ import numpy as np
 import rasterio
 import xarray as xr
 
-from tif2jpg import plot_preview
+# from tif2jpg import plot_preview
 
 
 def composite(src_fps, save_loc, save_nam, method="mean", dt="default"):
@@ -87,24 +87,24 @@ def composite(src_fps, save_loc, save_nam, method="mean", dt="default"):
     tif_time = time.time() - tif_time
     print(f"#  Time (TIFF): {tif_time:.2f} seconds")
 
-    # Save preview file as JPEG
-    jpg_time = time.time()
-    print("#\n# Saving preview image to JPEG...")
-    # Pickle array for passing it to plot_preview()
-    spt = os.path.join(save_loc, "temp_array.p")
-    with open(spt, "wb") as pf:
-        pickle.dump(comp_out, pf)
-    comp_out = None
-    try:
-        plot_preview(spt, dt, out_pth[:-3] + "jpg")
-    except MemoryError as me:
-        print("#  Memory error occurred, could not save to JPEG")
-        print(me)
-    finally:
-        # delete pickle
-        os.remove(spt)
-    jpg_time = time.time() - jpg_time
-    print(f"#  Time (JPEG): {jpg_time:.2f} seconds")
+    # # Save preview file as JPEG
+    # jpg_time = time.time()
+    # print("#\n# Saving preview image to JPEG...")
+    # # Pickle array for passing it to plot_preview()
+    # spt = os.path.join(save_loc, "temp_array.p")
+    # with open(spt, "wb") as pf:
+    #     pickle.dump(comp_out, pf)
+    # comp_out = None
+    # try:
+    #     plot_preview(spt, dt, out_pth[:-3] + "jpg")
+    # except MemoryError as me:
+    #     print("#  Memory error occurred, could not save to JPEG")
+    #     print(me)
+    # finally:
+    #     # delete pickle
+    #     os.remove(spt)
+    # jpg_time = time.time() - jpg_time
+    # print(f"#  Time (JPEG): {jpg_time:.2f} seconds")
 
 
 if __name__ == "__main__":
