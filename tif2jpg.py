@@ -46,6 +46,7 @@ def plot_preview(array_pickle, typ, save_path):
 
     # Save as JPG
     plt.savefig(save_path, bbox_inches='tight')
+    plt.close("all")
 
 
 def tif2jpg(path_in):
@@ -86,6 +87,7 @@ def tif2jpg(path_in):
 
     # Save as JPG
     plt.savefig(file_save, bbox_inches='tight')
+    plt.close("all")
 
     dt = time.time() - dt
     print(f"Time to convert to jpeg: {dt:02} sec.")
