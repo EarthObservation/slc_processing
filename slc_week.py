@@ -386,14 +386,12 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
                                  f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
                 tif = composite(paths_for_composite, week_path, composite_name,
                                 method="mean", dt=data_type)
+                # CREATE JPG PREVIEW
+                tif2jpg(tif, country_border)
                 tta2 = time.time() - tta2
                 print(f"#\n# Time (composite + preview file): {tta2:.2f} sec.\n")
             else:
                 print("\nNo images available for this combo!\n# SKIPPED!\n")
-
-            # ==================================================================
-            # CREATE JPG PREVIEW
-            tif2jpg(tif, country_border)
 
             # Remove temporary folder
             rmtree(tmp_f, ignore_errors=True)
