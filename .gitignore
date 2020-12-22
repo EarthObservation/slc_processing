@@ -8,3 +8,4 @@ composite_test
 /tmp/
 /composite_test_01/
 /composite_test/
+run__*.py
