@@ -141,7 +141,7 @@ def find_individual_images(list_of_days, src, direction, dt):
         if all_available:
             # FIND INDIVIDUAL IMAGES
             for sole in all_available:
-                sole_name = os.path.basename(sole)[:24]
+                sole_name = os.path.basename(sole)[:32]
                 if sole_name not in sole_images:
                     sole_images.append(sole_name)
 
@@ -306,12 +306,35 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
 
     # PROCESS FOR ONE WEEK
     for this_week in my_weeks.week_list:
+        tta_week = time.time()
+
         # CREATE NEW FOLDER FOR SAVING WEEKLY PRODUCTS
         week_path = make_save_folder(this_week, data_type, save_loc)
         temp_path = ".\\tmp"
 
-        tta_week = time.time()
         print(f"\nProcessing {os.path.basename(week_path)}")
+
+        # Initialize LOG
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        log_name = f"log_{timestr}.txt"
+        log_name = os.path.join(week_path, log_name)
+        with open(log_name, "w") as log:
+            title_str = f"# Log of {os.path.basename(week_path)} #"
+            log.write("#" * len(title_str) + "\n")
+            log.write(title_str + "\n")
+            log.write("#" * len(title_str) + "\n")
+
+            current_time = time.strftime("%a, %d %b %Y %H:%M:%S")
+            log.write("\n")
+            log.write(f"Time started: {current_time}\n")
+
+            log.write("\n")
+            log.write("Save location:\n")
+            log.write(week_path + "\n")
+            log.write("\n")
+            log.write("Geo. extents [minx, miny, maxx, maxy]:\n")
+            log.write(f"{bbox}\n")
+            log.write("\n")
 
         # LOOP OVER ALL 4 PRODUCT COMBINATIONS
         if combinations is None:
@@ -335,6 +358,14 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
             # Find individual images for that day
             to_aggregate = find_individual_images(diw, src_folder, direct,
                                                   data_type)
+
+            # LOG INPUT FILES
+            with open(log_name, "a") as log:
+                log.write(f"Source products for {direct} {polar}:\n")
+                for prod1, prod2 in to_aggregate:
+                    log.write(f" - {prod1}\n")
+                    [log.write(f"   -> {a}\n") for a in prod2]
+                log.write("\n")
 
             # ==================================================================
             # PROCESS INDIVIDUAL IMAGES
@@ -400,14 +431,14 @@ if __name__ == "__main__":
     # in_src = "r:\\Sentinel-1_SLC_products_SI_coherence_13.91m_UTM33N"
     # in_src = "r:\\Sentinel-1_SLC_products_SI_sigma_10m_UTM33N"
     # in_src = "r:\\Sentinel-1_SLC_products_AiTLAS_NL_coh_10m_Amersfoort"
-    in_src = "r:\\Sentinel-1_SLC_products_AiTLAS_NL_sigma_10m_Amersfoort"
+    in_src = "q:\\_S1_SLC_products_NL_sigma_10m_Amersfoort"
 
     # Save location
-    # in_save = "d:\\aitlas_slc_test_NL"
+    in_save = "d:\\aitlas_slc_test_NL_2"
     # in_save = "o:\\aitlas_slc_SI_coherence"
     # in_save = "o:\\aitlas_slc_SI_sigma"
     # in_save = "o:\\aitlas_slc_NL_coherence"
-    in_save = "o:\\aitlas_slc_NL_sigma"
+    # in_save = "o:\\aitlas_slc_NL_sigma"
     # --------------------------------------------------------------------------
 
     result = loop_weeks(in_start, in_end, in_step, in_bbox,
