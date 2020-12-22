@@ -1,91 +1,83 @@
-import pickle
+import glob
 import time
 from os.path import dirname, basename, join, isfile
-import glob
 
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import rasterio
+import rasterio.plot
+from descartes import PolygonPatch
+from matplotlib.collections import PatchCollection
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from numpy.random import rand
 
 
-def set_type(typ):
-    if typ == "SIG":
-        typ_long = "SIGMA"
-        v_min = 0
-        v_max = 0.2
-    elif typ == "COH":
-        typ_long = "COHERENCE"
-        v_min = 0
-        v_max = 1
-    else:
-        print(f"Type {typ} is not defined, using defaults.")
-        typ_long = "default"
-        v_min = None
-        v_max = None
+def tif2jpg(path_in, country_border=None):
+    """Function creates JPEG preview file from SLC weekly composites (GeoTIFF).
+    Optionally add country borders to the preview. The image is saved in the
+    same folder as source raster, with matching filename.
 
-    return typ_long, v_min, v_max
+    Notes
+    -----
+    Make sure both polygon and raster have the same CRS.
 
+    Parameters
+    ----------
+    path_in : string
+        Path to source raster file (all formats compatible with rasterio)
+    country_border : string (optional)
+        Path to shapefile (make sure CRS match with raster)
 
-def plot_preview(array_pickle, typ, save_path):
-    array = pickle.load(open(array_pickle, "rb"))
-    array = array.squeeze()
-
-    # Set some parameters for plotting
-    typ_long, v_min, v_max = set_type(typ)
-
-    # Create figure and plot raster
-    f = plt.figure(figsize=(9.6, 7.2))
-    ax = f.add_subplot(111)
-    my_raster = ax.imshow(array, vmax=v_max, vmin=v_min)
-    ax.set_title(f"Overview - {typ_long} {array.shape}")
-
-    # Add colorbar that fits nicely
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(my_raster, cax=cax)
-
-    # Save as JPG
-    plt.savefig(save_path, bbox_inches='tight')
-    plt.close("all")
-
-
-def tif2jpg(path_in):
+    Returns
+    -------
+    None
+    """
     dt = time.time()
-    # File path
-    # file_save = ".\\test_coh3.jpg" # file_orig[:-4] + ".png"
 
-    file_orig = path_in
-    file_save = join(dirname(path_in), "preview_" + basename(path_in)[:-3] + "jpg")
+    # Create output path
+    file_save = join(dirname(path_in), basename(path_in)[:-3] + "jpg")
 
-    # file_save = ".\\test_jpg\\" + basename(path_in)[:-3] + "jpg"
-
+    # Create title for plot
     img_title = basename(path_in)[:-4]
 
-    # Open file and read array
-    with rasterio.open(file_orig, "r") as src:
-        array = src.read()
-        array = array.squeeze()
-
-    # Set some parameters for plotting
+    # Set range for displayed data
     if "SIG" in img_title:
+        # Majority of pixels are below 0.5 (values can go up to 10000)
         v_min, v_max = (0, 0.2)
     elif "COH" in img_title:
+        # Coherence is always between 0 and 1
         v_min, v_max = (0, 1)
     else:
         v_min, v_max = (None, None)
 
-    # Create figure and plot raster
-    f = plt.figure(figsize=(9.6, 7.2))
-    ax = f.add_subplot(111)
-    my_raster = ax.imshow(array, vmax=v_max, vmin=v_min)
-    ax.set_title(f"Overview - {img_title} {array.shape}")
+    # Plot raster
+    with rasterio.open(path_in, "r") as src:
+        array = src.shape
+        fig, ax = plt.subplots(figsize=(9.6, 7.2))
+        # f = plt.figure(figsize=(9.6, 7.2))
+        img_hidden = ax.imshow(rand(2, 2), vmax=v_max, vmin=v_min)
+        # ax = f.add_subplot(111)
+        img = rasterio.plot.show((src, 1), ax=ax, vmax=v_max, vmin=v_min)
+        # fig.colorbar(img_hidden, ax=ax)
+
+    # Add title
+    ax.set_title(f"Overview - {img_title} {array}")
 
     # Add colorbar that fits nicely
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(my_raster, cax=cax)
+    fig.colorbar(img_hidden, cax=cax)
+    # plt.colorbar(my_raster, cax=cax)  <-- used with ax.imshow
+    # f.colorbar(my_raster)
 
-    # Save as JPG
+    # Add country borders (from SHP)
+    if country_border:
+        shape = gpd.read_file(country_border)
+        fts = [feature["geometry"] for _, feature in shape.iterrows()]
+        ptchs = [PolygonPatch(ft, edgecolor="red", facecolor="none") for ft in fts]
+        ax.add_collection(PatchCollection(ptchs, match_original=True))
+
+    # Save as JPG and close the figure
     plt.savefig(file_save, bbox_inches='tight')
     plt.close("all")
 
@@ -93,9 +85,23 @@ def tif2jpg(path_in):
     print(f"Time to convert to jpeg: {dt:02} sec.")
 
 
-def batch_convert(folder):
-    # folder = "o:\\aitlas_slc_SI_coherence"
+def batch_convert(folder, shp):
+    """Creates a list of paths to all rasters that don't have a preview file and
+    executes tif2jpg() function on them. The function searches folder structure
+    of the SLC weekly products (SIG, COH).
 
+    Parameters
+    ----------
+    folder : string
+        Folder containing SLC weekly products.
+    shp : string
+        Path to shape file for country borders outline.
+
+    Returns
+    -------
+    None
+
+    """
     print(f"Searching for TIFs in {folder}")
     q = join(folder, "*", "*.tif")
     paths = glob.glob(q)
@@ -105,12 +111,16 @@ def batch_convert(folder):
         if not isfile(jpg):
             name = basename(tif)
             print(f"Converting {name} ({i+1}/{len(paths)})")
-            tif2jpg(tif)
+            tif2jpg(tif, shp)
         else:
             print(f"SKIP ({i+1}/{len(paths)})")
 
 
 if __name__ == "__main__":
-    my_folder = "o:\\aitlas_slc_SI_sigma"
-    batch_convert(my_folder)
+    # my_folder = "o:\\aitlas_slc_SI_sigma"
+    my_folder = "d:\\aitlas_slc_test_NL"
+    # my_folder = "d:\\slc\\test_tif2jpg"
+    my_shape = ".\\shapes\\nl_border_Amersfoort.shp"
+    # my_shape = ".\\shapes\\si_border_UTM.shp"
+    batch_convert(my_folder, my_shape)
     print("DONE!")
