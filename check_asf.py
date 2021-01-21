@@ -82,6 +82,8 @@ def check_asf(aoi, src_pth, copy_to_folder, year=None, month=None,
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # GET LIST OF FILES FROM SERVER
     res = requests.get(url)
+    if res.status_code != 200:
+        print(res.status_code)
     res_json = res.json()[0]
     on_server_codes = [file['sceneId'][-4:] for file in res_json]
     logfile.write(f"Number of files on server: {len(on_server_codes)}\n")
