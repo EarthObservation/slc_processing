@@ -16,14 +16,17 @@ import pandas as pd
 import requests
 
 
-def check_asf(aoi, src_pth, copy_to_folder, year, month=None):
+def check_asf(aoi, src_pth, copy_to_folder, year=None, month=None,
+              start_date=None, end_date=None):
     makedirs(copy_to_folder, exist_ok=True)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # a) Initiate log file for saving results
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
     logname = "check_dwn-asf_"
-    if month is None:
+    if start_date and end_date:
+        logname = f"{logname}-interval-{start_date}_{end_date}--{timestr}"
+    elif month is None:
         logname = logname + f"{year}-all--{timestr}"
     else:
         logname = logname + f"{year}-{month:02}--{timestr}"
@@ -39,7 +42,12 @@ def check_asf(aoi, src_pth, copy_to_folder, year, month=None):
     logfile.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
 
     # b) Build url
-    if month is None:
+    if start_date and end_date:
+        qs = (start_date[0:4], start_date[4:5], start_date[5:6])
+        qe = (end_date[0:4], end_date[4:5], end_date[5:6])
+        q_start = f"&start={qs[0]}-{qs[1]}-{qs[2]}T00:00:00Z"
+        q_end = f"&end={qe[0]}-{qe[1]}-{qe[2]}T23:59:59.99Z"
+    elif month is None:
         q_start = f"&start={year}-01-01T00:00:00Z"
         q_end = f"&end={year + 1}-01-01T00:00:00Z"
     else:
@@ -58,7 +66,10 @@ def check_asf(aoi, src_pth, copy_to_folder, year, month=None):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # SEARCH FOLDER FOR ALREADY DOWNLOADED
-    if month is None:
+    if start_date and end_date:
+        # TODO: search for specific interval (probably have to loop glob with all dates)
+        search_zip_files = f"*{year}*.zip"
+    elif month is None:
         search_zip_files = f"*{year}*.zip"
     else:
         search_zip_files = f"*{year}{month:02}*.zip"
@@ -71,6 +82,8 @@ def check_asf(aoi, src_pth, copy_to_folder, year, month=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # GET LIST OF FILES FROM SERVER
     res = requests.get(url)
+    if res.status_code != 200:
+        print(res.status_code)
     res_json = res.json()[0]
     on_server_codes = [file['sceneId'][-4:] for file in res_json]
     logfile.write(f"Number of files on server: {len(on_server_codes)}\n")

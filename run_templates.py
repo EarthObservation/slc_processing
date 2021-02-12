@@ -30,6 +30,10 @@ in_type = "SIG"  # COH or SIG
 # bbox for Netherlands in EPSG:28992
 in_bbox = [0, 305400, 287100, 625100]
 
+# Shapefile for preview
+my_shp = ".\\shapes\\nl_border_Amersfoort.shp"
+# my_shp = ".\\shapes\\si_border_UTM.shp"
+
 in_comb = None
 # combinations = [
 #   ("DES", "VV"),
@@ -55,7 +59,8 @@ in_save = "o:\\aitlas_slc_NL_sigma"
 # --------------------------------------------------------------------------
 
 result = loop_weeks(in_start, in_end, in_step, in_bbox,
-                    in_type, in_src, in_save, in_comb)
+                    in_type, in_src, in_save,
+                    combinations=in_comb, country_border=my_shp)
 print(result)
 
 

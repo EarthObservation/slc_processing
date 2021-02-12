@@ -41,7 +41,8 @@ def composite(src_fps, save_loc, save_nam, method="mean", dt="default"):
 
     Returns
     -------
-
+    out_pth : str
+        Absolute path to the product.
     """
     # Make sure save location exists
     os.makedirs(save_loc, exist_ok=True)
@@ -105,6 +106,8 @@ def composite(src_fps, save_loc, save_nam, method="mean", dt="default"):
     #     os.remove(spt)
     # jpg_time = time.time() - jpg_time
     # print(f"#  Time (JPEG): {jpg_time:.2f} seconds")
+
+    return out_pth
 
 
 if __name__ == "__main__":
