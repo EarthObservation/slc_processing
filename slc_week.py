@@ -135,7 +135,7 @@ def find_individual_images(list_of_days, src, direction, dt):
             one_year = one_day[:4]
             src_month = os.path.join(src, f"*{dt}*{one_year}")
 
-        search_day = os.path.join(src_month, one_day + f"*{direction}*{dt}*")
+        search_day = os.path.join(src_month, one_day + f"*{direction}*")
         all_available = glob.glob(search_day)
         # This step filters out .dim files, so we are only left with folders
         all_available = [fnm for fnm in all_available if not fnm.endswith('.dim')]
@@ -346,7 +346,7 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
 
         # CREATE NEW FOLDER FOR SAVING WEEKLY PRODUCTS
         week_path = make_save_folder(this_week, data_type, save_loc)
-        temp_path = ".\\tmp"
+        temp_path = ".\\tmp2"
 
         print(f"\nProcessing {os.path.basename(week_path)}")
 
