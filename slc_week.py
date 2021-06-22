@@ -130,7 +130,12 @@ def find_individual_images(list_of_days, src, direction, dt):
         # For coherence first find the correct sub-folder
         if dt == "COH":
             one_month = one_day[:4] + "-" + one_day[4:6]
+            # TEMPORARY SOLUTION
+            # For processing DK with Bornholm, have to find a way
+            # to search for both folders with and without the extension
+            # "_incl_Bornholm"
             src_month = os.path.join(src, f"*{dt}*{one_month}")
+            # src_month = os.path.join(src, f"*{dt}*{one_month}_incl_Bornholm")
         else:
             one_year = one_day[:4]
             src_month = os.path.join(src, f"*{dt}*{one_year}")
