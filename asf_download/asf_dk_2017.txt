@@ -1,0 +1,34 @@
+Download SLC - Denmark 2017
+
+STROJ:
+
+** FEBRUAR ** 02
+  Failures: 1 files
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20170220T164430_20170220T164457_015370_019375_D55C.zip
+		  ZLOVDAN 5/1/2021
+
+** APRIL ** 04
+ Successes: 71 files, 306952438252 bytes
+ 
+** MAJ + JUNIJ ** 05 + 06
+  Successes: 163 files, 701677105533 bytes
+
+** NOV + DEC ** 11 + 12
+
+
+__________________________________________________________________
+          
+ZIGA:
+
+** MAREC ** 03
+ Successes: 71 files, 307198920602 bytes
+  Failures: 1 files
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20170323T052408_20170323T052436_015815_01A0CD_82C7.zip
+		  ZLOVDAN 5/1/2021
+
+** JULIJ + AVGUST ** 07 + 08
+ Successes: 174 files, 753812999586 bytes
+
+** SEP + OKT ** 09 + 10
+ Successes: 171 files, 747897622664 bytes
+

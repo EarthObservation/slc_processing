@@ -1,0 +1,85 @@
+QUERY FOR S1-SLC Netherlands footprint year 2017
+
+C:\Users\ncoz\Desktop>curl "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-01-01T00:00:00Z&end=2017-12-31T23:59:00Z&processingLevel=SLC&output=CSV" > NL_y2017.csv
+
+======================================================================================================
+
+ARIA2 BULK DOWNLOAD:
+
+aria2c --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-01-01T00:00:00Z&end=2017-12-31T23:59:00Z&processingLevel=SLC&output=METALINK"
+
+
+=========
+---------
+=========
+PHASE 1 : JAN, FEB, MAR, APR
+coz.nejc@gmail.com
+aitlas01
+slo61HRT#$
+
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=aitlas01 --http-passwd="slo61HRT#$" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-08-01T00:00:00Z&end=2017-09-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+
+=========
+PHASE 2 : MAJ, JUN, JUL
+coznejc7@gmail.com
+aitlas00
+slo61HRT#$
+
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=aitlas00 --http-passwd="slo61HRT#$" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-06-01T00:00:00Z&end=2017-07-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+
+=========
+PHASE 3 : AVG, SEP, OKT
+nejc.coz.gradbincek@gmail.com
+cozn
+slo61hrtNNN
+
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-05-01T00:00:00Z&end=2017-06-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+--continue=true
+--auto-file-renaming=false
+--max-concurrent-downloads=10
+--check-integrity
+
+
+####################
+## SETUP COMMANDS ##
+####################
+net use l: /delete
+net use l: \\172.16.10.10\lidar /persistent:yes
+
+set PATH=D:\nejc\aria2;%PATH%
+
+cd /d  L:
+cd S1-aitlas
+
+##########
+LATEST COMMANDS (NL 2018)
+-> net use w: \\xbox\iaps /user:iaps iaps#123 /persistent:yes
+
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-05-01T00:00:00Z&end=2018-06-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+ČET 24/9/2020
+
+- marec 2018
+- april 2018
+- unused:
+W:\>aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-05-01T00:00:00Z&end=2018-06-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+
+PON 28/09/2020
+
+(1) W:\
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=aitlas01 --http-passwd="slo61HRT#$" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-03-01T00:00:00Z&end=2018-04-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+(2) w:\
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=aitlas00 --http-passwd="slo61HRT#$" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-04-01T00:00:00Z&end=2018-05-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+SRE 30/09/2020
+
+(2) W:\
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=aitlas00 --http-passwd="slo61HRT#$" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-06-01T00:00:00Z&end=2018-07-01T00:00:00Z&processingLevel=SLC&output=METALINK"
+
+(3) w:\
+aria2c --max-concurrent-downloads=100 --auto-file-renaming=false --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2018-07-01T00:00:00Z&end=2018-08-01T00:00:00Z&processingLevel=SLC&output=METALINK"

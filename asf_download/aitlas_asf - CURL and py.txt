@@ -1,0 +1,42 @@
+A) SET PATH FOR CURL
+
+# Set CURL to env path
+set PATH=%PATH%;D:\nejc\curl\bin
+echo %PATH%
+
+# This is how you remove last 16 characters from string variable (SLICING)
+echo %PATH:~0,-16% 
+
+
+B) CURL - GET METALINK (OR CSV)
+# cd to the download folder and run curl comand as below
+# remember to set dates, area and other required properties
+curl "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2019-03-01T00:00:00Z&end=2019-04-01T00:00:00Z&processingLevel=SLC&output=CSV" > NL_y2019_m03.csv
+
+B.1) You can edit the csv or metalink file to select only specific products
+
+
+C) Download python bulk-download script from ASF
+https://bulk-download.asf.alaska.edu/
+
+
+D) Run the python script with the csv or metalink file
+>python download-all.py NL_y2019_m03.csv
+
+D.1) You need to sign in with your ASF account
+My ASF accounts:
+### 1 ############
+coz.nejc@gmail.com
+aitlas01
+slo61HRT#$
+
+### 2 ############
+coznejc7@gmail.com
+aitlas00
+slo61HRT#$
+
+### 3 ############
+nejc.coz.gradbincek@gmail.com
+cozn
+slo61hrtNNN
+

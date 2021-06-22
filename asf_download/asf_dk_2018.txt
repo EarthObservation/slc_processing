@@ -1,0 +1,246 @@
+Download SLC - Denmark 2017
+
+IAPS-STROJ:
+
+** MAJ + JUNIJ **
+** 05  + 06    **
+> Processing 168 downloads from 1 input files. [06-01-2021]
+- Failures: 6 files                            [08-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180618T170920_20180618T170947_022414_026D63_53B1.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180617T051622_20180617T051649_022392_026CB5_CA6E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180616T052357_20180616T052424_011394_014ECE_54AF.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180616T052331_20180616T052359_011394_014ECE_761E.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180615T164449_20180615T164517_022370_026C0C_CF29.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180615T164424_20180615T164451_022370_026C0C_D1F6.zip
+>  Started download on IAPS-ZK  (6 files)      [12-01-2021]
+
+** SEPTEMBER + OKTOBER **
+** 09        + 10      **
+> Processing 170 downloads from 1 input files. [08-01-2021]
+- Failures: 17 files                           [11-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181017T170025_20181017T170052_013195_018627_E254.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T054020_20181012T054048_013115_0183B4_2683.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T053956_20181012T054023_013115_0183B4_18D2.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181005T170050_20181005T170117_013020_0180C7_9C69.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181001T053248_20181001T053315_023938_029D22_C5D9.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181001T053223_20181001T053251_023938_029D22_9832.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180930T165243_20180930T165310_012947_017E9A_8ECE.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180918T053955_20180918T054022_012765_017906_80C3.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180918T053930_20180918T053957_012765_017906_A6EC.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180906T165217_20180906T165244_012597_0173E2_A0AB.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180906T054019_20180906T054047_012590_0173A9_09B1.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180904T170906_20180904T170933_012568_017300_E3CE.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180904T170842_20180904T170909_012568_017300_7BF8.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180903T051543_20180903T051610_012546_017252_BDC1.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180901T164412_20180901T164439_012524_0171A4_D60E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180901T164347_20180901T164414_012524_0171A4_5031.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180901T053214_20180901T053241_012517_017168_F61B.zip
+>  Started download on IAPS-ZK   (17 files)    [12-01-2021]
++  FINISHED                                    [16-01-2021]
+__________________________________________________________________
+          
+IAPS-ZK:
+
+** JANUAR + FEBRUAR **
+** 01     + 02      **
+> Processing 159 downloads from 1 input files. [05-01-2021]
++ Successes: 159 files, 692079268665 bytes     [06-01-2021]
+
+** MAREC + APRIL **
+** 03    + 04    **
+> Processing 160 downloads from 1 input files. [06-01-2021]
+- Failures: 15 files                           [07-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180414T170124_20180414T170152_021466_024F82_EC52.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180414T170059_20180414T170126_021466_024F82_2D73.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180413T170858_20180413T170925_010468_01313A_5DBA.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180413T170834_20180413T170901_010468_01313A_B6F6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180412T051539_20180412T051609_010446_01308A_10D4.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180411T052427_20180411T052454_021415_024DEE_FF94.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180411T052401_20180411T052429_021415_024DEE_2DA8.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180410T164404_20180410T164431_010424_012FD0_DF5B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180410T164339_20180410T164406_010424_012FD0_02D3.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180410T053201_20180410T053228_010417_012F98_7AB6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180410T053137_20180410T053204_010417_012F98_E598.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180410T053111_20180410T053139_010417_012F98_9B31.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180409T165315_20180409T165342_021393_024D4A_185E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180403T054011_20180403T054039_010315_012C56_38F1.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180403T053946_20180403T054013_010315_012C56_9A83.zip
++ Successes: 15 files, 65946139822 bytes       [07-01-2021]
+
+** JULIJ + AVGUST **
+** 07    + 08     **
+> Processing 169 downloads from 1 input files. [08-01-2021]
+- Interrupted (lost internet connection)       [11-01-2021]
+		  - Error at (140/169) Downloading https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180710T052349_20180710T052416_011744_0159AE_7472.zip
+>  Started download on IAPS-ZK   (34 files)    [12-01-2021]
++ FINISHED                                     [16-01-2021]
+
+** NOVEMBER + DECEMBER **
+** 11       + 12       **
+> Processing 161 downloads from 1 input files. [11-01-2021]
+- Failures: 73 files                           [12-11-2021]
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181228T170113_20181228T170140_014245_01A7C8_5559.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181228T170049_20181228T170116_014245_01A7C8_30A2.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181203T170949_20181203T171016_024864_02BCF3_FE82.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181127T170907_20181127T170934_013793_0198FD_06EF.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181127T170842_20181127T170909_013793_0198FD_463B.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181125T052435_20181125T052502_024740_02B8BA_1614.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181125T052410_20181125T052438_024740_02B8BA_1D8A.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181124T164412_20181124T164439_013749_019799_F2D5.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181124T164348_20181124T164415_013749_019799_70DB.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181124T053210_20181124T053237_013742_01975C_F769.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181124T053145_20181124T053212_013742_01975C_DC2F.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181124T053119_20181124T053147_013742_01975C_2E57.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181123T165323_20181123T165350_024718_02B7EB_F3D2.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181123T165258_20181123T165326_024718_02B7EB_CB94.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181123T054045_20181123T054113_024711_02B7AE_5519.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181123T054020_20181123T054047_024711_02B7AE_69F9.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181122T170115_20181122T170142_013720_01969C_DFF7.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181122T170050_20181122T170117_013720_01969C_79E5.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181122T170024_20181122T170052_013720_01969C_A917.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181121T170950_20181121T171017_024689_02B6E2_E27F.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181121T170925_20181121T170952_024689_02B6E2_93F6.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181120T051627_20181120T051654_024667_02B608_9079.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181119T052356_20181119T052423_013669_019505_2B7A.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181119T052331_20181119T052358_013669_019505_2F9D.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181118T164454_20181118T164522_024645_02B536_183F.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181118T164430_20181118T164457_024645_02B536_9609.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181118T053248_20181118T053315_024638_02B4F6_B467.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181118T053223_20181118T053251_024638_02B4F6_47CA.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181117T165243_20181117T165310_013647_019452_F4F6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181117T165218_20181117T165245_013647_019452_8745.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181117T054020_20181117T054048_013640_019419_7619.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181117T053955_20181117T054022_013640_019419_9BE6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181117T053931_20181117T053958_013640_019419_A145.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181116T170133_20181116T170201_024616_02B422_899C.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181116T170108_20181116T170135_024616_02B422_5C7B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181115T170907_20181115T170934_013618_019365_18D5.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181115T170842_20181115T170909_013618_019365_6A4C.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181114T051544_20181114T051611_013596_0192BC_69BD.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181113T052436_20181113T052503_024565_02B24A_EEB4.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181113T052410_20181113T052438_024565_02B24A_61DF.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181112T164413_20181112T164440_013574_01920C_9F7B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181112T164348_20181112T164415_013574_01920C_2719.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181112T053215_20181112T053242_013567_0191CE_C122.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181112T053149_20181112T053217_013567_0191CE_620D.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181112T053124_20181112T053151_013567_0191CE_3C55.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T165324_20181111T165351_024543_02B17B_1859.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T165258_20181111T165326_024543_02B17B_A975.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T054045_20181111T054113_024536_02B13D_E05D.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T054021_20181111T054048_024536_02B13D_86A4.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181110T170115_20181110T170142_013545_019118_64C0.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181110T170050_20181110T170117_013545_019118_591E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181110T170024_20181110T170052_013545_019118_D430.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181109T170950_20181109T171017_024514_02B072_C035.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181109T170925_20181109T170952_024514_02B072_622F.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181108T051627_20181108T051654_024492_02AF94_E34B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181107T052356_20181107T052423_013494_018F83_36F6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181107T052331_20181107T052358_013494_018F83_A018.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181106T164455_20181106T164523_024470_02AEC7_1893.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181106T164430_20181106T164457_024470_02AEC7_9810.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181106T053249_20181106T053316_024463_02AE88_AAC5.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181106T053223_20181106T053251_024463_02AE88_DDE3.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181105T165243_20181105T165310_013472_018ED4_2F9A.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181105T165218_20181105T165245_013472_018ED4_E3AD.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181105T054020_20181105T054048_013465_018E9F_88E7.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181105T053955_20181105T054022_013465_018E9F_AACE.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181105T053931_20181105T053958_013465_018E9F_A036.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181104T170133_20181104T170201_024441_02ADBC_D591.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181104T170108_20181104T170135_024441_02ADBC_987E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181103T170907_20181103T170934_013443_018DF5_C489.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181103T170843_20181103T170910_013443_018DF5_9AD0.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181102T051544_20181102T051611_013421_018D4D_A9E2.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181101T052436_20181101T052503_024390_02ABE4_0349.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181101T052410_20181101T052438_024390_02ABE4_82FF.zip
++ FINISHED                                    [16-01-2021]		  
+		  
+** MISSING FROM 6, 7, 9 and 10 **
+> Processing 57 downloads from 1 input files. [12-01-2021]
+- Failures: 14 files                          [12-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180712T170946_20180712T171013_022764_0277AE_3817.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180711T051623_20180711T051650_022742_0276FD_30E6.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180709T053219_20180709T053247_022713_027617_4CAA.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T165239_20180708T165306_011722_015902_D60B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T165214_20180708T165241_011722_015902_8B8B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T054016_20180708T054044_011715_0158CB_4C9E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T053951_20180708T054018_011715_0158CB_74A6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180701T170020_20180701T170048_011620_0155D0_2436.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181017T170025_20181017T170052_013195_018627_E254.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T054020_20181012T054048_013115_0183B4_2683.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T053956_20181012T054023_013115_0183B4_18D2.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181005T170050_20181005T170117_013020_0180C7_9C69.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181001T053223_20181001T053251_023938_029D22_9832.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180616T052357_20180616T052424_011394_014ECE_54AF.zip
++ FINISHED                                    [16-01-2021]
+
+- Failures: 17 files. [16-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181121T170950_20181121T171017_024689_02B6E2_E27F.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T165258_20181111T165326_024543_02B17B_A975.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181111T054045_20181111T054113_024536_02B13D_E05D.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181017T170025_20181017T170052_013195_018627_E254.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T054020_20181012T054048_013115_0183B4_2683.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181012T053956_20181012T054023_013115_0183B4_18D2.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20181005T170050_20181005T170117_013020_0180C7_9C69.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20181001T053223_20181001T053251_023938_029D22_9832.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180712T170946_20180712T171013_022764_0277AE_3817.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180711T051623_20180711T051650_022742_0276FD_30E6.zip
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20180709T053219_20180709T053247_022713_027617_4CAA.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T165239_20180708T165306_011722_015902_D60B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T165214_20180708T165241_011722_015902_8B8B.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T054016_20180708T054044_011715_0158CB_4C9E.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180708T053951_20180708T054018_011715_0158CB_74A6.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180701T170020_20180701T170048_011620_0155D0_2436.zip
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20180616T052357_20180616T052424_011394_014ECE_54AF.zip
++ FINISHED                                    [16-01-2021]	
+
+
+***************************************************************************************************************************
+	  
+2019 on iaps-zk:
+** 01 - 02 **
+> Processing 148 downloads from 1 input files.  [16-01-2021]
++ Successes: 148 files, 643529126874 bytes      [18-01-2021]
+
+
+** 03 ** IAPS-STROJ
+> Processing 81 downloads from 1 input files.   [16-01-2021]
++ Successes: 81 files, 355048577085 bytes       [18-01-2021]
+
+
+** 04 ** IAPS-STROJ
+> Processing 79 downloads from 1 input files.   [18-01-2021]
++ Successes: 78 files, 332773114392 bytes       [20-01-2021]
+- Failures: 1 files                             [20-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SA/S1A_IW_SLC__1SDV_20190430T052408_20190430T052436_027015_030ABC_3709.zip
+> Processing 1 downloads from 1 input files.    [21-01-2021]
++ Successes: 1 files, 4517564571 bytes          [21-01-2021]
+
+** 07-08 ** IAPS-ZK
+> Processing 169 downloads from 1 input files.  [18-01-2021]
++ Successes: 169 files, 726915859553 bytes      [20-01-2021]
+
+
+** 05-06 ** IAPS-ZK
+> Processing 164 downloads from 1 input files.  [21-01-2021]
++ Successes: 164 files, 701766178889 bytes      [22-01-2021]
+
+
+** 09 - 10 ** IAPS-ODZ
+> Processing 163 downloads from 1 input files.  [20-01-2021]
++ Successes: 162 files, 703308069128 bytes      [21-01-2021]
+- Failures: 1 files                             [21-01-2021]
+          - https://datapool.asf.alaska.edu/SLC/SB/S1B_IW_SLC__1SDV_20191024T170122_20191024T170148_018620_02314E_8567.zip
+
+
+** 2020 1 week ** IAPS-STROJ
+> Processing 16 downloads from 1 input files.   [21-01-2021]
++ Successes: 16 files, 69976004282 bytes        [21-01-2021]
+
+
+** 11 ** IAPS-ZK
+> Processing 72 downloads from 1 input files.   [22-01-2021]
++ Successes: 72 files, 313775481042 bytes       [23-01-2021]
+
+** 12 ** IAPS-ODZ
+> Processing 65 downloads from 1 input files.   [22-01-2021]
++ Successes: 65 files, 286017018735 bytes       [23-01-2021]

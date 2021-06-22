@@ -1,0 +1,17 @@
+https://search.asf.alaska.edu/#/?maxResults=250&polygon=POLYGON((6.525%2053.5239,5.1388%2053.3312,4.6883%2052.9431,3.6671%2051.4616,3.701%2051.3604,3.8892%2051.2786,4.0315%2051.2907,4.6536%2051.5139,5.728%2051.2399,5.7943%2050.993,6.0069%2050.9678,5.9937%2051.0297,6.1438%2051.2544,6.0052%2051.8934,6.7445%2051.9148,7.0795%2052.4108,6.6637%2052.5374,6.7445%2052.6497,7.068%2052.6497,7.2066%2053.3174,6.525%2053.5239))&start=2017-01-01T00:00:00Z&end=2017-12-31T23:59:00Z&productTypes=SLC
+
+
+curl "https://api.daac.asf.alaska.edu/services/search/param?platform=R1&absoluteOrbit=25234&output=CSV" > myfilename.csv
+
+SEARCH for Netherlands
+curl "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-01-01T00:00:00Z&end=2017-12-31T23:59:00Z&processingLevel=SLC&output=MEALINK" > myfilename.metalink
+
+Download with ARIA2
+u: cozn
+p: slo61hrtNNN
+
+aria2c --check-certificate=false --http-auth-challenge=true --http-user=cozn --http-passwd="slo61hrtNNN" "https://api.daac.asf.alaska.edu/services/search/param?platform=Sentinel-1&polygon=6.525,53.5239,5.1388,53.3312,4.6883,52.9431,3.6671,51.4616,3.701,51.3604,3.8892,51.2786,4.0315,51.2907,4.6536,51.5139,5.728,51.2399,5.7943,50.993,6.0069,50.9678,5.9937,51.0297,6.1438,51.2544,6.0052,51.8934,6.7445,51.9148,7.0795,52.4108,6.6637,52.5374,6.7445,52.6497,7.068,52.6497,7.2066,53.3174,6.525,53.5239&start=2017-01-01T00:00:00Z&end=2017-01-31T23:59:00Z&processingLevel=SLC&output=MEALINK"
+
+
+"https://api.daac.asf.alaska.edu/services/search/param?granule_list=S1A_EW_GRDM_1SDH_20151003T040339_20151003T040443_007983_00B2A6_DDE4&output=metalink"
+
