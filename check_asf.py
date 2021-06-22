@@ -142,20 +142,20 @@ def check_asf(aoi, src_pth, copy_to_folder, year=None, month=None,
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # MOVE FILES TO DK FOLDER
-    if files_not_needed:
-        logfile.write("The following files have been moved:\n")
-        for i, undesired in enumerate(files_not_needed):
-            q = join(src_pth, f"*{undesired}*.zip")
-            src = glob.glob(q)[0]
-            dst = join(copy_to_folder, basename(src))
-            print(f"Moving file {i+1}/{len(files_not_needed)}")
-            try:
-                shutil.move(src, dst)
-            except shutil.Error as err:
-                logfile.write(f"Error while moving {src}: {err.args[0]}\n")
-            finally:
-                logfile.write(f" {src} --> {dst}\n")
-        logfile.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+    # if files_not_needed:
+    #     logfile.write("The following files have been moved:\n")
+    #     for i, undesired in enumerate(files_not_needed):
+    #         q = join(src_pth, f"*{undesired}*.zip")
+    #         src = glob.glob(q)[0]
+    #         dst = join(copy_to_folder, basename(src))
+    #         print(f"Moving file {i+1}/{len(files_not_needed)}")
+    #         try:
+    #             shutil.move(src, dst)
+    #         except shutil.Error as err:
+    #             logfile.write(f"Error while moving {src}: {err.args[0]}\n")
+    #         finally:
+    #             logfile.write(f" {src} --> {dst}\n")
+    #     logfile.write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # CLEAN-UP
@@ -178,21 +178,24 @@ if __name__ == "__main__":
                "14.7275,55.0286,12.6518,55.2160,12.4555,55.5703,11.1882,56.2079,"
                "10.7409,56.8055,10.6702,57.2158,10.0693,57.2364")
 
+    slovenia = "13.2784,45.3366,16.6873,45.3366,16.6873,46.9685,13.2784,46.9685,13.2784,45.3366"
+
     # Folder containing downloaded files
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2017"
-    in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-02"
+    # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-02"
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_NL_2019-08-12"
     # in_src_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
+    in_src_pth = "r:\\Sentinel-1_SLC"
 
     # Where to move files that are not in the desired AOI:
     # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2017"
-    in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2019"
     # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2019"
-    # in_sur_pth = "r:\\Sentinel-1_SLC_to_delete"
+    # in_sur_pth = "r:\\Sentinel-1_SLC_aitlas_DK_2019"
+    in_sur_pth = "r:\\Sentinel-1_SLC_to_delete"
 
-    in_polygon = netherlands
-    in_year = 2019
-    in_month = 2  # Set month to None to search entire year
+    in_polygon = slovenia
+    in_year = 2021
+    in_month = None  # Set month to None to search entire year
 
     out = check_asf(in_polygon, in_src_pth, in_sur_pth, in_year, in_month)
     print(out)
