@@ -28,14 +28,18 @@ vii) Create mean weekly mosaic from all resampled images for that week
 
 import glob
 import os
-import rasterio
 import time
 from datetime import datetime, timedelta
 from shutil import rmtree
 
 import numpy as np
 from osgeo import gdal
+import rasterio
+from rasterio.mask import mask
+from rasterio.merge import merge
 from scipy.ndimage import binary_dilation
+from shapely.geometry import box, mapping
+import geopandas as gpd
 
 from composite_dask import composite
 from tif2jpg import tif2jpg
@@ -160,10 +164,11 @@ def find_individual_images(list_of_days, src, direction, dt):
     return out_image_with_list
 
 
-def pre_process_bursts(bursts_list, polarity, folder_pth, bbox=None):
+def pre_process_bursts(bursts_list, polarity, folder_pth, dt, bbox=None):
     """Prepares input images (bursts) for processing and returns list of paths.
 
         For each burst:
+        TODO: update comments
         1)  Sets path to pre-processed image
         1a) Skips if image is out of bounds [time saving]
         1b) New output bounds if only partial overlap [time saving]
@@ -182,25 +187,25 @@ def pre_process_bursts(bursts_list, polarity, folder_pth, bbox=None):
         burst_file = glob.glob(p)[0]
 
         # Check if extents overlap with AOI (if bbox was assigned)
+        # This will make sure all parts of the image that fall out of bounds are cropped
         if bbox:
-            with rasterio.open(burst_file) as rio:
+            with rasterio.open(burst_file) as src:
                 # Extents of the burst
-                bbr = rio.bounds
-            is_overlapping = (
-                    bbr.left < bbox[2] and bbox[0] < bbr.right and
-                    bbr.bottom < bbox[3] and bbox[1] < bbr.top)
-            out_bounds = list(bbr)
-            if bbr.left < bbox[0]:
-                out_bounds[0] = bbox[0]
-            if bbr.bottom < bbox[1]:
-                out_bounds[1] = bbox[1]
-            if bbr.right > bbox[2]:
-                out_bounds[2] = bbox[2]
-            if bbr.top > bbox[1]:
-                out_bounds[3] = bbox[3]
+                burst_bounds = box(*src.bounds)
+
+            # Check if bounding boxes overlap
+            is_overlapping = burst_bounds.intersects(box(*bbox))
+            shp_name = f"{i:02d}_" + os.path.basename(burst_file)[:-4] + ".gpkg"
+            out_shp = os.path.join(folder_pth, shp_name)
+            gpd.GeoSeries([burst_bounds, box(*bbox)]).to_file(out_shp, driver="GPKG")
+
+            # Get intersection between AOI bbox and burst bbox
+            out_poly = burst_bounds.intersection(box(*bbox))
+
         else:
+            # If bbox of AOI was not assigned, do not crop the image
             is_overlapping = True
-            out_bounds = None
+            out_poly = burst_bounds
 
         if is_overlapping:
             # Store paths of output, so they can be used in the nex step
@@ -208,53 +213,35 @@ def pre_process_bursts(bursts_list, polarity, folder_pth, bbox=None):
             out_burst = os.path.join(folder_pth, image_name)
             paths.append(out_burst)
 
-            # Set all nodata to 0 (there are both 0 and nan values present)
-            ds = gdal.Warp(out_burst, burst_file, srcNodata=np.nan,
-                           dstNodata=0, multithread=True,
-                           outputBounds=out_bounds)
-            ds = None
+            # Crop image to bbox
+            mask_poly = [mapping(out_poly)]
+            with rasterio.open(burst_file) as src:
+                burst_arr, burst_transform = mask(src, mask_poly, crop=True, filled=True)
+                burst_profile = src.profile
 
-            # Open raster for further processing
-            r = gdal.Open(out_burst, gdal.GA_Update)  # gdal.GA_Update: save output to the source file
-            raster_arr = r.GetRasterBand(1).ReadAsArray()
-            warp_iter = 10  # By default erode edges by 10 pixels
-
-            # Test for nodata "stripes" (by reading a random column and counting nodata intervals
-            test_column = raster_arr[:, raster_arr.shape[1] // 2]
-            a_zeros = np.where(test_column == 0)[0]
-            a_groups = np.split(a_zeros, np.where(np.diff(a_zeros) != 1)[0] + 1)
-
-            # More than 2 nodata intervals means there is a nodata stripe present
-            if len(a_groups) > 2:
-                # Find the width of nodata pixels
-                px_wid = len(a_groups[1])
-                # First erode by 3 pixels to remove dark pixels on edge of strip
-                nodata_mask = raster_arr == 0
-                dilated_mask = binary_dilation(nodata_mask, iterations=3)
-                raster_arr[dilated_mask] = 0
-
-                # Prepare raster band to be used by fill nodata
-                r.GetRasterBand(1).WriteArray(raster_arr)
-                raster_bnd = r.GetRasterBand(1)
-                # Preform fill nodata on the array
-                ds = gdal.FillNodata(raster_bnd, maskBand=None,
-                                     maxSearchDist=px_wid+3, smoothingIterations=0,
-                                     callback=None)
-                ds = None
-
-                # Open band as array to be dilated in the next step
-                raster_arr = raster_bnd.ReadAsArray()
-                # Also erode pixels that were added with FillNodata
-                warp_iter += px_wid
+            # Deal with nodata
+            burst_arr[np.isnan(burst_arr)] = 0
+            burst_arr[burst_arr == 0] = np.nan
 
             # Remove dark pixels on the edge of each raster
-            nodata_mask = raster_arr == 0
-            dilated_mask = binary_dilation(nodata_mask, iterations=warp_iter)
-            raster_arr[dilated_mask] = 0
+            nodata_mask = np.isnan(burst_arr)
+            dilated_mask = binary_dilation(nodata_mask, iterations=10)
+            burst_arr[dilated_mask] = np.nan
+            
+            # Clip values larger than 1 for COH
+            if dt == "COH":
+                burst_arr[burst_arr > 1] = 1
 
-            r.GetRasterBand(1).WriteArray(raster_arr)
-            # noinspection PyUnusedLocal
-            r = None
+            burst_profile.update(
+                driver="GTiff",
+                compress="lzw",
+                width=burst_arr.shape[2],
+                height=burst_arr.shape[1],
+                transform=burst_transform,
+                nodata=np.nan
+            )
+            with rasterio.open(out_burst, "w", **burst_profile) as dst:
+                dst.write(burst_arr)
 
             print(f"X ", end="")
         else:
@@ -263,7 +250,7 @@ def pre_process_bursts(bursts_list, polarity, folder_pth, bbox=None):
     return paths
 
 
-def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, bbox=None):
+def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, dt, bbox=None):
     """Prepares all individual products from one week for compositing.
 
     Parameters
@@ -278,6 +265,8 @@ def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, bbox=None):
         Polarity, either VV or VH for S-1 SLC products
     tmp_folder : str
         Path for saving outputs.
+    dt : str
+        COH or SIG
     bbox : list
         Output extents in the [x_min, y_min, x_max, y_max] format
 
@@ -309,7 +298,7 @@ def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, bbox=None):
         # Pre-process "bursts" for warping into a single image
         # to_be_warped is a LIST OF PATHS to individual product folders
         print(f"        - consists of {len(bursts)} bursts\n        ", end="")
-        to_be_warped = pre_process_bursts(bursts, polar, tmp_folder, bbox=bbox)
+        to_be_warped = pre_process_bursts(bursts, polar, tmp_folder, dt, bbox=bbox)
 
         if to_be_warped:
             # WARP BURSTS INTO SINGLE IMAGE
@@ -319,17 +308,17 @@ def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, bbox=None):
 
             # Resample to 10m using bilinear interpolation and align pixels to grid
             # Also crop to extents - all files should have the same extents (outputBounds)
-            ds = gdal.Warp(out_image, to_be_warped,
-                           xRes=10, yRes=10,
-                           dstNodata=0, targetAlignedPixels=True,
-                           resampleAlg=gdal.gdalconst.GRA_Bilinear,
-                           multithread=True, outputBounds=bbox,
-                           options=['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512'])
-            ds = None
+            merge(
+                to_be_warped,
+                bounds=bbox,
+                res=(10, 10),
+                target_aligned_pixels=True,
+                dst_path=out_image
+            )
 
-            # REMOVE TEMPORARY FILES ("bursts")
-            for file in to_be_warped:
-                os.remove(file)
+            # # REMOVE TEMPORARY FILES ("bursts")
+            # for file in to_be_warped:
+            #     os.remove(file)
 
             tta1 = time.time() - tta1
             print(f"        [Time (individual image): {tta1:.2f} sec.]")
@@ -339,9 +328,17 @@ def make_individual_rasters(to_aggregate, direct, polar, tmp_folder, bbox=None):
     return final_paths
 
 
-def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
-               src_folder, save_loc,
-               combinations=None, country_border=None):
+def loop_weeks(
+        dt_start,
+        dt_end,
+        dt_step,
+        bbox,
+        data_type,
+        src_folder,
+        save_loc,
+        combinations=None,
+        country_border=None
+):
     # Create object for finding time intervals for processing
     my_weeks = WeekList(dt_start, dt_end, dt_step)
 
@@ -410,8 +407,14 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
 
             # ==================================================================
             # PROCESS INDIVIDUAL IMAGES
-            paths_for_composite = make_individual_rasters(to_aggregate, direct,
-                                                          polar, tmp_f, bbox=bbox)
+            paths_for_composite = make_individual_rasters(
+                to_aggregate,
+                direct,
+                polar,
+                tmp_f,
+                dt=data_type,
+                bbox=bbox
+            )
             t_combo = time.time() - t_combo
             print(f"\n  Finished combo {direct} {polar} in {t_combo:.2f} sec.")
 
@@ -423,8 +426,15 @@ def loop_weeks(dt_start, dt_end, dt_step, bbox, data_type,
                 tww = this_week["week"]
                 composite_name = f"{diw[0]}_{diw[-1]}_weekly_SLC_{data_type}" \
                                  f"_{direct}_{polar}_yr{diw[0][2:4]}wk{tww:02}"
-                tif = composite(paths_for_composite, week_path, composite_name,
-                                method="mean", dt=data_type)
+                
+                tif = composite(
+                    paths_for_composite,
+                    week_path,
+                    composite_name,
+                    method="mean",
+                    dt=data_type
+                )
+                
                 # CREATE JPG PREVIEW
                 tif2jpg(tif, country_border)
                 tta2 = time.time() - tta2
